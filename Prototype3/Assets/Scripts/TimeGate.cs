@@ -4,27 +4,13 @@ using UnityEngine;
 
 public class TimeGate : MonoBehaviour
 {
-    [SerializeField] private bool GateState = false;
+     public int gateIndex;
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void PassCheckpoint()
-    {
-
-        //if (levelTimer > 0)
+        if (other.CompareTag("Player"))
         {
-
+            TimeManager.Instance.CheckGate(gateIndex);
         }
     }
 }

@@ -6,26 +6,70 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-    [SerializeField] private float levelTimer;
-    [SerializeField] private float personalBestLevelTimer;
-    [SerializeField] private float highScoreLevelTimer;
-    [SerializeField] private float gateTimer;
-    [SerializeField] private float prevGateTimer;
-    [SerializeField] private bool GateState = false;
+    public static TimeManager Instance;
 
-    public TextMeshPro timerText; // Assign this in the Inspector
-    private float startTime;
-    // Start is called before the first frame update
-    void Start()
+    public TMP_Text timerText;
+
+    private float timer;
+    private bool isTiming = false;
+    private int currentGateIndex = 0;
+    private int totalGates;
+
+    private void Awake()
     {
-        startTime = Time.time;     
+        if (Instance == null) Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        float levelTimer = Time.time - startTime; // Calculate the elapsed time
-        // Update the display with the elapsed time (e.g., in seconds)
-        timerText.text = levelTimer.ToString("0.00");
+        timer = 0f;
+        timerText.text = "0:00.00";
+        totalGates = FindObjectsOfType<TimeGate>().Length;
+    }
+
+    private void Update()
+    {
+        if (isTiming)
+        {
+            timer += Time.deltaTime;
+            timerText.text = FormatTime(timer);
+        }
+    }
+
+    public void CheckGate(int gateIndex)
+    {
+        if (gateIndex == currentGateIndex)
+        {
+            if (gateIndex == 0)
+            {
+                StartTimer();
+            }
+
+            currentGateIndex++;
+
+            if (currentGateIndex == totalGates)
+            {
+                StopTimer();
+            }
+        }
+    }
+
+    private void StartTimer()
+    {
+        isTiming = true;
+        timer = 0f;
+    }
+
+    private void StopTimer()
+    {
+        isTiming = false;
+        Debug.Log("Timer stopped at: " + FormatTime(timer));
+    }
+
+    private string FormatTime(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60);
+        float seconds = time % 60;
+        return string.Format("{0}:{1:00.00}", minutes, seconds);
     }
 }
