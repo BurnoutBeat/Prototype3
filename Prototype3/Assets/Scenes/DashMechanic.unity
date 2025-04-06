@@ -300,6 +300,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
+      propertyPath: crouching
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
       propertyPath: dashPower
       value: 500
       objectReference: {fileID: 0}

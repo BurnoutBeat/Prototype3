@@ -23,6 +23,8 @@ public class PlayerBehavior : MonoBehaviour
     public float crouchSpeed = 1f;
     [SerializeField] float dashPower = 100f;
     [SerializeField] float groundDashCooldown = 1f;
+    [Tooltip("Set between 0-1")]
+    [SerializeField] float groundDashReduction = 0.75f;
 
     public bool crouching;
     private float crouchStartTime;
@@ -105,7 +107,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         if(grounded() && canDashGround)
         {
-            playerAbilities.Dash(dashPower * 0.75f);
+            playerAbilities.Dash(dashPower * groundDashReduction);
             canDashGround = false;
             StartCoroutine(GroundCooldown());
         }
