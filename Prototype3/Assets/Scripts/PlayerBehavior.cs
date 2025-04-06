@@ -25,12 +25,15 @@ public class PlayerBehavior : MonoBehaviour
     public bool crouching;
     private float crouchStartTime;
 
+    private bool paused;
+
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
+        paused = false;
     }
     private void FixedUpdate()
     {
@@ -142,6 +145,25 @@ public class PlayerBehavior : MonoBehaviour
             eyes.GetComponent<Transform>().localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         }
     }
+
+    /// <summary>
+    /// Pauses and unpauses the game
+    /// </summary>
+    /// <param name="obj"></param>
+    private void Pause_started(InputAction.CallbackContext obj)
+    {
+        paused = !paused;
+
+        if(paused)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+    }
+
     private void OnEnable()
     {
         inputActions.PlayerActions.Enable();
@@ -151,7 +173,9 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
+        inputActions.PlayerActions.Pause.started += Pause_started;
     }
+
     private void OnDisable()
     {
         inputActions.PlayerActions.Disable();
@@ -161,5 +185,6 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
+        inputActions.PlayerActions.Pause.started -= Pause_started;
     }
 }
