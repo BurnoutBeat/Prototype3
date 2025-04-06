@@ -633,7 +633,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eyes: {fileID: 330585543}
   maxLookAngle: 80
-  jumpForce: 10
+  jumpForce: 5
+  crouchChargeTime: 2
+  maxCrouchJumpPower: 10
   moveSpeed: 10
   rotationSpeed: 50
   crouchSpeed: 0.1
