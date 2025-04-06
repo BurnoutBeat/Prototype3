@@ -38,6 +38,7 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        print("moved");
         moveInput = context.ReadValue<Vector2>();
     }
     private void OnMoveCanceled(InputAction.CallbackContext context)
@@ -94,8 +95,9 @@ public class PlayerBehavior : MonoBehaviour
         }  
     }
     private bool grounded() {
-        float rayDistance = 1f;
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
+        float rayDistance = 1.1f;
+        Vector3 centerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        RaycastHit[] hits = Physics.RaycastAll(centerPos, Vector3.down, rayDistance);
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject != gameObject)
