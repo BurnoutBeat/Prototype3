@@ -21,9 +21,15 @@ public class PlayerBehavior : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 5f;
     public float crouchSpeed = 1f;
+    [SerializeField] float dashPower = 100f;
+    [SerializeField] float groundDashCooldown = 1f;
 
     public bool crouching;
     private float crouchStartTime;
+
+    private PlayerAbilities playerAbilities;
+    private bool canDashGround = true;
+    private bool canDashAir = true;
 
     private void Awake()
     {
@@ -31,6 +37,7 @@ public class PlayerBehavior : MonoBehaviour
         Cursor.visible = false;
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
+        playerAbilities = GetComponent<PlayerAbilities>();
     }
     private void FixedUpdate()
     {
@@ -93,6 +100,20 @@ public class PlayerBehavior : MonoBehaviour
             rb.velocity = Vector2.zero;
         }  
     }
+
+    private void OnDash(InputAction.CallbackContext ctx)
+    {
+        if(grounded() && canDashGround)
+        {
+            playerAbilities.Dash(dashPower * 0.75f);
+            canDashGround = false;
+            StartCoroutine(GroundCooldown());
+        }
+        else if(!grounded() && canDashAir)
+        {
+            playerAbilities.Dash(dashPower);
+        }
+    }
     private bool grounded() {
         float rayDistance = 1f;
         RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
@@ -100,6 +121,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (hit.collider.gameObject != gameObject)
             {
+                canDashAir = true;
                 return true;
             }
         }
@@ -151,6 +173,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
+        inputActions.PlayerActions.Dash.performed += OnDash;
     }
     private void OnDisable()
     {
@@ -161,5 +184,13 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
+        inputActions.PlayerActions.Dash.performed -= OnDash;
+    }
+
+    private IEnumerator GroundCooldown()
+    {
+        yield return new WaitForSeconds(groundDashCooldown);
+
+        canDashGround = true;
     }
 }
