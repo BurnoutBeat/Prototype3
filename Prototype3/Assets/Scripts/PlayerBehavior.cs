@@ -16,13 +16,14 @@ public class PlayerBehavior : MonoBehaviour
     public GameObject eyes; //camera
     public float maxLookAngle = 80f;
     public float jumpForce = 10f;
+    public float crouchChargeTime = 2f;
+    public float maxCrouchJumpPower = 10f;
     public float moveSpeed = 5f;
     public float rotationSpeed = 5f;
     public float crouchSpeed = 1f;
 
     public bool crouching;
-    private Vector3 crouchingCamPos;
-    private Vector3 startingCamPos;
+    private float crouchStartTime;
 
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         moveInput = Vector2.zero;
         if (!crouching ) {
-            rb.velocity = Vector2.zero;
+            rb.velocity = new Vector3(rb.velocity.x / 4f, rb.velocity.y, rb.velocity.z / 4f);
         }
     }
     private void OnLook(InputAction.CallbackContext context)
@@ -53,7 +54,16 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (grounded()) {
+        if (grounded() && crouching)
+        {
+            float chargeStrength = (Time.time - crouchStartTime) / crouchChargeTime;
+            if (chargeStrength > 1) {
+                chargeStrength = 1;
+            }
+            rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
+        }
+        else if (grounded()) 
+        {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
         if (crouching) {
@@ -65,6 +75,7 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void CrouchPerformed(InputAction.CallbackContext context)
     {
+        crouchStartTime = Time.time;
         if (grounded()) {
             crouching = true;
             Vector3 newPos = transform.position;
@@ -83,7 +94,7 @@ public class PlayerBehavior : MonoBehaviour
         }  
     }
     private bool grounded() {
-        float rayDistance = 1.5f;
+        float rayDistance = 1f;
         RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
         foreach (RaycastHit hit in hits)
         {
@@ -100,8 +111,7 @@ public class PlayerBehavior : MonoBehaviour
         moveDirection.Normalize();
 
         if (crouching) {
-
-            Vector3 flatVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            Vector3 flatVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
             if (flatVelocity.magnitude > moveSpeed)
             {
                 rb.velocity = new Vector3(flatVelocity.normalized.x * moveSpeed, rb.velocity.y, flatVelocity.normalized.z * moveSpeed);
@@ -113,7 +123,7 @@ public class PlayerBehavior : MonoBehaviour
             } else {
                 rb.AddForce(moveDirection * moveSpeed * 20f * Time.fixedDeltaTime);
             } 
-            Vector3 flatVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            Vector3 flatVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
             if (flatVelocity.magnitude > moveSpeed)
             {
                 rb.velocity = new Vector3(flatVelocity.normalized.x * moveSpeed, rb.velocity.y, flatVelocity.normalized.z * moveSpeed);
