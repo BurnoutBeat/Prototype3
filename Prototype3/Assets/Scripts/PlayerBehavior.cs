@@ -95,9 +95,10 @@ public class PlayerBehavior : MonoBehaviour
         }  
     }
     private bool grounded() {
-        float rayDistance = 1.1f;
+        float rayDistance = 0.6f;
+        Vector3 BoxSize = new Vector3(0.5f, 0.5f, 0.5f);
         Vector3 centerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        RaycastHit[] hits = Physics.RaycastAll(centerPos, Vector3.down, rayDistance);
+        RaycastHit[] hits = Physics.BoxCastAll(centerPos, BoxSize, Vector3.down, Quaternion.identity, rayDistance);
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject != gameObject)
