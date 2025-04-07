@@ -114,6 +114,7 @@ public class PlayerBehavior : MonoBehaviour
         else if(!grounded() && canDashAir)
         {
             playerAbilities.Dash(dashPower);
+            canDashAir = false;
         }
     }
     private bool grounded() {
