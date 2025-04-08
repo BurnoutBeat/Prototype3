@@ -35,6 +35,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool canDashGround = true;
     private bool canDashAir = true;
     private float chargeStrength;
+    private bool paused;
 
     private void Awake()
     {
@@ -43,6 +44,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
+        paused = false;
     }
     private void FixedUpdate()
     {
@@ -185,6 +187,25 @@ public class PlayerBehavior : MonoBehaviour
             eyes.GetComponent<Transform>().localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         }
     }
+
+    /// <summary>
+    /// Pauses the game
+    /// </summary>
+    /// <param name="obj"></param>
+    private void Pause_started(InputAction.CallbackContext obj)
+    {
+        paused = !paused;
+        Cursor.visible = paused;
+        if(paused)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+    }
+
     private void OnEnable()
     {
         inputActions.PlayerActions.Enable();
@@ -195,7 +216,9 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
         inputActions.PlayerActions.Dash.performed += OnDash;
+        inputActions.PlayerActions.Pause.started += Pause_started;
     }
+
     private void OnDisable()
     {
         inputActions.PlayerActions.Disable();
@@ -206,6 +229,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
         inputActions.PlayerActions.Dash.performed -= OnDash;
+        inputActions.PlayerActions.Pause.started -= Pause_started;
     }
 
     private IEnumerator GroundCooldown()
