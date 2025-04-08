@@ -4,6 +4,7 @@ using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerBehavior : MonoBehaviour
     private float verticalRotation = 0f;
 
     public GameObject eyes; //camera
+    public Slider jumpChargeMeter;
     public float maxLookAngle = 80f;
     public float jumpForce = 10f;
     public float crouchChargeTime = 2f;
@@ -21,11 +23,18 @@ public class PlayerBehavior : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 5f;
     public float crouchSpeed = 1f;
+    [SerializeField] float dashPower = 100f;
+    [SerializeField] float groundDashCooldown = 1f;
+    [Tooltip("Set between 0-1")]
+    [SerializeField] float groundDashReduction = 0.75f;
 
     public bool crouching;
     private float crouchStartTime;
 
-    private bool paused;
+    private PlayerAbilities playerAbilities;
+    private bool canDashGround = true;
+    private bool canDashAir = true;
+    private float chargeStrength;
 
     private void Awake()
     {
@@ -33,14 +42,31 @@ public class PlayerBehavior : MonoBehaviour
         Cursor.visible = false;
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
-        paused = false;
+        playerAbilities = GetComponent<PlayerAbilities>();
     }
     private void FixedUpdate()
     {
         MovePlayer();
+        UpdateJumpChargeSlider();
+    }
+    private void UpdateJumpChargeSlider() {
+        if (crouching)
+        {
+            chargeStrength = (Time.time - crouchStartTime) / crouchChargeTime;
+            if (chargeStrength > 1)
+            {
+                chargeStrength = 1;
+            }
+            jumpChargeMeter.value = chargeStrength * 100;
+        }
+        else
+        {
+            jumpChargeMeter.value = 0;
+        }
     }
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        print("moved");
         moveInput = context.ReadValue<Vector2>();
     }
     private void OnMoveCanceled(InputAction.CallbackContext context)
@@ -59,10 +85,6 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (grounded() && crouching)
         {
-            float chargeStrength = (Time.time - crouchStartTime) / crouchChargeTime;
-            if (chargeStrength > 1) {
-                chargeStrength = 1;
-            }
             rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
         }
         else if (grounded()) 
@@ -96,13 +118,31 @@ public class PlayerBehavior : MonoBehaviour
             rb.velocity = Vector2.zero;
         }  
     }
+
+    private void OnDash(InputAction.CallbackContext ctx)
+    {
+        if(grounded() && canDashGround)
+        {
+            playerAbilities.Dash(dashPower * groundDashReduction);
+            canDashGround = false;
+            StartCoroutine(GroundCooldown());
+        }
+        else if(!grounded() && canDashAir)
+        {
+            playerAbilities.Dash(dashPower);
+            canDashAir = false;
+        }
+    }
     private bool grounded() {
-        float rayDistance = 1f;
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
+        float rayDistance = 0.6f;
+        Vector3 BoxSize = new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 centerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        RaycastHit[] hits = Physics.BoxCastAll(centerPos, BoxSize, Vector3.down, Quaternion.identity, rayDistance);
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject != gameObject)
             {
+                canDashAir = true;
                 return true;
             }
         }
@@ -145,25 +185,6 @@ public class PlayerBehavior : MonoBehaviour
             eyes.GetComponent<Transform>().localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         }
     }
-
-    /// <summary>
-    /// Pauses and unpauses the game
-    /// </summary>
-    /// <param name="obj"></param>
-    private void Pause_started(InputAction.CallbackContext obj)
-    {
-        paused = !paused;
-
-        if(paused)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
-    }
-
     private void OnEnable()
     {
         inputActions.PlayerActions.Enable();
@@ -173,9 +194,8 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
-        inputActions.PlayerActions.Pause.started += Pause_started;
+        inputActions.PlayerActions.Dash.performed += OnDash;
     }
-
     private void OnDisable()
     {
         inputActions.PlayerActions.Disable();
@@ -185,6 +205,13 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
-        inputActions.PlayerActions.Pause.started -= Pause_started;
+        inputActions.PlayerActions.Dash.performed -= OnDash;
+    }
+
+    private IEnumerator GroundCooldown()
+    {
+        yield return new WaitForSeconds(groundDashCooldown);
+
+        canDashGround = true;
     }
 }
