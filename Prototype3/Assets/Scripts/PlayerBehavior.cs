@@ -4,6 +4,7 @@ using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerBehavior : MonoBehaviour
     private float verticalRotation = 0f;
 
     public GameObject eyes; //camera
+    public Slider jumpChargeMeter;
     public float maxLookAngle = 80f;
     public float jumpForce = 10f;
     public float crouchChargeTime = 2f;
@@ -32,6 +34,7 @@ public class PlayerBehavior : MonoBehaviour
     private PlayerAbilities playerAbilities;
     private bool canDashGround = true;
     private bool canDashAir = true;
+    private float chargeStrength;
 
     private void Awake()
     {
@@ -44,9 +47,26 @@ public class PlayerBehavior : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        UpdateJumpChargeSlider();
+    }
+    private void UpdateJumpChargeSlider() {
+        if (crouching)
+        {
+            chargeStrength = (Time.time - crouchStartTime) / crouchChargeTime;
+            if (chargeStrength > 1)
+            {
+                chargeStrength = 1;
+            }
+            jumpChargeMeter.value = chargeStrength * 100;
+        }
+        else
+        {
+            jumpChargeMeter.value = 0;
+        }
     }
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        print("moved");
         moveInput = context.ReadValue<Vector2>();
     }
     private void OnMoveCanceled(InputAction.CallbackContext context)
@@ -65,10 +85,6 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (grounded() && crouching)
         {
-            float chargeStrength = (Time.time - crouchStartTime) / crouchChargeTime;
-            if (chargeStrength > 1) {
-                chargeStrength = 1;
-            }
             rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
         }
         else if (grounded()) 
@@ -118,8 +134,10 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
     private bool grounded() {
-        float rayDistance = 1f;
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
+        float rayDistance = 0.6f;
+        Vector3 BoxSize = new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 centerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        RaycastHit[] hits = Physics.BoxCastAll(centerPos, BoxSize, Vector3.down, Quaternion.identity, rayDistance);
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject != gameObject)
