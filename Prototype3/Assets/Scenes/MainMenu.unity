@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a9d341e6607d746bb729f214c416b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: PlayerMovment
+  sceneName: PauseTesting
 --- !u!1 &418407574
 GameObject:
   m_ObjectHideFlags: 0

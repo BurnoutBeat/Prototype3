@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Search;
+using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -39,7 +38,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool canDashGround = true;
     private bool canDashAir = true;
     private float chargeStrength;
-    private bool paused;
+    [SerializeField] GameObject pauseMenu;
 
     private void Awake()
     {
@@ -49,7 +48,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
-        paused = false;
+        Time.timeScale = 1;
     }
     private void FixedUpdate()
     {
@@ -229,16 +228,26 @@ public class PlayerBehavior : MonoBehaviour
     /// <param name="obj"></param>
     private void Pause_started(InputAction.CallbackContext obj)
     {
-        paused = !paused;
-        Cursor.visible = paused;
-        if(paused)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
+        Cursor.lockState = CursorLockMode.Confined;
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+    }
+
+    /// <summary>
+    /// Resumes the game
+    /// </summary>
+    public void ResumeButton()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1;
+    }
+
+    /// <summary>
+    /// Returns to the main menu screen
+    /// </summary>
+    public void ReturnToMenuButton()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void OnEnable()
