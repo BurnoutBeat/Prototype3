@@ -5,7 +5,7 @@ public class PlayerAbilities : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] GameObject player;
-    [SerializeField] float dashDistance = 5f;
+    [SerializeField] float dashDistance = 10f;
     [SerializeField] float dashSpeed = 50f;
     private PlayerBehavior playerBehavior;
 
