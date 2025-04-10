@@ -288,6 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eyes: {fileID: 884284286164930379}
+  jumpChargeMeter: {fileID: 0}
   maxLookAngle: 80
   jumpForce: 5
   crouchChargeTime: 2
@@ -297,6 +298,7 @@ MonoBehaviour:
   crouchSpeed: 0.1
   dashPower: 100
   groundDashCooldown: 1
+  groundDashReduction: 0.75
   crouching: 0
 --- !u!114 &1879785131524336585
 MonoBehaviour:
