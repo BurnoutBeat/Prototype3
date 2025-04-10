@@ -248,6 +248,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: dashDistance
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -306,7 +311,7 @@ PrefabInstance:
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: dashPower
-      value: 500
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7035970617918173501, guid: 2926415d8266bb242938733482691a01,
         type: 3}
