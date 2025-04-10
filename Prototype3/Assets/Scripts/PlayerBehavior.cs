@@ -1,45 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerBehavior : MonoBehaviour
 {
     private PlayerControls inputActions;
+    private PlayerAbilities playerAbilities;
+    private CapsuleCollider capsuleCollider;
+    private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookDelta;
-    private Rigidbody rb;
-    private CapsuleCollider capsuleCollider;
+    private float crouchStartTime;
+    private float chargeStrength;
     private float verticalRotation = 0f;
+    private bool crouching = false;
+    private bool crouchingMovment = false;
+    private bool capsLockHeld = false;
+    private bool canDashGround = true;
+    private bool canDashAir = true;
 
+    [Header("LOOKING")]
     public GameObject eyes; //camera
-    public Slider jumpChargeMeter;
     public float maxLookAngle = 80f;
+    public float rotationSpeed = 5f;
+    [Space(10)]
+    [Header("JUMPING")]
+    public Slider jumpChargeMeter;
     public float jumpForce = 10f;
     public float crouchChargeTime = 2f;
     public float maxCrouchJumpPower = 10f;
+    [Space(10)]
+    [Header("MOVEMENT")]
     public float moveSpeed = 5f;
     public float airMoveSpeed = 2.5f;
     [Space(10)]
-    private float rotationSpeed = 5f;
+    [Header("DASH")]
     public float dashPower = 100f;
     public float groundDashCooldown = 1f;
     [Tooltip("Set between 0-1")]
     public float groundDashReduction = 0.75f;
+    
 
-    private bool crouching = false;
-    private bool crouchingMovment = false;
-    private bool capsLockHeld = false;
-    private float crouchStartTime;
 
-    private PlayerAbilities playerAbilities;
-    private bool canDashGround = true;
-    private bool canDashAir = true;
-    private float chargeStrength;
-    [SerializeField] GameObject pauseMenu;
-    [SerializeField] private Slider sensSlider;
+
 
     private void Awake()
     {
@@ -49,9 +56,6 @@ public class PlayerBehavior : MonoBehaviour
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
-        Time.timeScale = 1;
-        rotationSpeed = MainMenuBehaviour.sensitivity;
-        LoadSensitivity();
     }
     private void FixedUpdate()
     {
@@ -224,35 +228,6 @@ public class PlayerBehavior : MonoBehaviour
             eyes.GetComponent<Transform>().localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         }
     }
-
-    /// <summary>
-    /// Pauses the game
-    /// </summary>
-    /// <param name="obj"></param>
-    private void Pause_started(InputAction.CallbackContext obj)
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Time.timeScale = 0;
-        pauseMenu.SetActive(true);
-    }
-
-    /// <summary>
-    /// Resumes the game
-    /// </summary>
-    public void ResumeButton()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1;
-    }
-
-    /// <summary>
-    /// Returns to the main menu screen
-    /// </summary>
-    public void ReturnToMenuButton()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-
     private void OnEnable()
     {
         inputActions.PlayerActions.Enable();
@@ -263,9 +238,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
         inputActions.PlayerActions.Dash.performed += OnDash;
-        inputActions.PlayerActions.Pause.started += Pause_started;
     }
-
     private void OnDisable()
     {
         inputActions.PlayerActions.Disable();
@@ -276,7 +249,6 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
         inputActions.PlayerActions.Dash.performed -= OnDash;
-        inputActions.PlayerActions.Pause.started -= Pause_started;
     }
 
     private IEnumerator GroundCooldown()
@@ -284,24 +256,5 @@ public class PlayerBehavior : MonoBehaviour
         yield return new WaitForSeconds(groundDashCooldown);
 
         canDashGround = true;
-    }
-
-    /// <summary>
-    /// Sets the sensitivity of the player
-    /// </summary>
-    /// <param name="slider"></param>
-    public void SetSensitivity()
-    {
-        rotationSpeed = sensSlider.value;
-        PlayerPrefs.SetFloat("sens", rotationSpeed);
-    }
-
-    /// <summary>
-    /// Loads the playerPref of the sensitivity
-    /// </summary>
-    private void LoadSensitivity()
-    {
-        rotationSpeed = PlayerPrefs.GetFloat("sens");
-        sensSlider.value = rotationSpeed;
     }
 }
