@@ -24,7 +24,6 @@ public class PlayerAbilities : MonoBehaviour
 
         while (distanceTraveled < dashDistance)
         {
-
             float moveStep = dashSpeed * Time.deltaTime;
 
             if (rb.SweepTest(dashDir, out RaycastHit hit, moveStep))
