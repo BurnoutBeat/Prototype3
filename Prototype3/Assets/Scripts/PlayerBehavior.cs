@@ -9,36 +9,44 @@ using UnityEngine.UI;
 public class PlayerBehavior : MonoBehaviour
 {
     private PlayerControls inputActions;
+    private PlayerAbilities playerAbilities;
+    private CapsuleCollider capsuleCollider;
+    private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookDelta;
-    private Rigidbody rb;
-    private CapsuleCollider capsuleCollider;
+    private float crouchStartTime;
+    private float chargeStrength;
     private float verticalRotation = 0f;
+    private bool crouching = false;
+    private bool crouchingMovment = false;
+    private bool capsLockHeld = false;
+    private bool canDashGround = true;
+    private bool canDashAir = true;
 
+    [Header("LOOKING")]
     public GameObject eyes; //camera
-    public Slider jumpChargeMeter;
     public float maxLookAngle = 80f;
+    public float rotationSpeed = 5f;
+    [Space(10)]
+    [Header("JUMPING")]
+    public Slider jumpChargeMeter;
     public float jumpForce = 10f;
     public float crouchChargeTime = 2f;
     public float maxCrouchJumpPower = 10f;
+    [Space(10)]
+    [Header("MOVEMENT")]
     public float moveSpeed = 5f;
     public float airMoveSpeed = 2.5f;
     [Space(10)]
-    public float rotationSpeed = 5f;
+    [Header("DASH")]
     public float dashPower = 100f;
     public float groundDashCooldown = 1f;
     [Tooltip("Set between 0-1")]
     public float groundDashReduction = 0.75f;
+    
 
-    private bool crouching = false;
-    private bool crouchingMovment = false;
-    private bool capsLockHeld = false;
-    private float crouchStartTime;
 
-    private PlayerAbilities playerAbilities;
-    private bool canDashGround = true;
-    private bool canDashAir = true;
-    private float chargeStrength;
+
 
     private void Awake()
     {
