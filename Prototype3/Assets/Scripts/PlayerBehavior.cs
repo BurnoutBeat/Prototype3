@@ -23,7 +23,7 @@ public class PlayerBehavior : MonoBehaviour
     public float moveSpeed = 5f;
     public float airMoveSpeed = 2.5f;
     [Space(10)]
-    public float rotationSpeed = 5f;
+    private float rotationSpeed = 5f;
     public float dashPower = 100f;
     public float groundDashCooldown = 1f;
     [Tooltip("Set between 0-1")]
@@ -39,6 +39,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool canDashAir = true;
     private float chargeStrength;
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] private Slider sensSlider;
 
     private void Awake()
     {
@@ -49,6 +50,8 @@ public class PlayerBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
         Time.timeScale = 1;
+        rotationSpeed = MainMenuBehaviour.sensitivity;
+        LoadSensitivity();
     }
     private void FixedUpdate()
     {
@@ -228,7 +231,7 @@ public class PlayerBehavior : MonoBehaviour
     /// <param name="obj"></param>
     private void Pause_started(InputAction.CallbackContext obj)
     {
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
     }
@@ -281,5 +284,24 @@ public class PlayerBehavior : MonoBehaviour
         yield return new WaitForSeconds(groundDashCooldown);
 
         canDashGround = true;
+    }
+
+    /// <summary>
+    /// Sets the sensitivity of the player
+    /// </summary>
+    /// <param name="slider"></param>
+    public void SetSensitivity()
+    {
+        rotationSpeed = sensSlider.value;
+        PlayerPrefs.SetFloat("sens", rotationSpeed);
+    }
+
+    /// <summary>
+    /// Loads the playerPref of the sensitivity
+    /// </summary>
+    private void LoadSensitivity()
+    {
+        rotationSpeed = PlayerPrefs.GetFloat("sens");
+        sensSlider.value = rotationSpeed;
     }
 }

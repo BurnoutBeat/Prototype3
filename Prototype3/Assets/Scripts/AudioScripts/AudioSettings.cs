@@ -23,7 +23,6 @@ public class AudioSettings : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            Debug.Log("hehehehehehehehehehehhhehehehehehehhehehehe");
             audioStuff.SetActive(true);
             LoadSettings();
             audioStuff.SetActive(false);

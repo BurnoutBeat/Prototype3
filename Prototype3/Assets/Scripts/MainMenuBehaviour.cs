@@ -9,10 +9,43 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuBehaviour : MonoBehaviour
 {
     [SerializeField] private string sceneName;
+    [SerializeField] private Slider sensSlider;
+
+    public static MainMenuBehaviour Instance;
+    public static float sensitivity;
+
+    /// <summary>
+    /// Ensures there is only one instance
+    /// </summary>
+    private void Awake()
+    {
+        //Makes sure there is one singleton instance
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+
+        LoadSensitivity();
+    }
+
+    /// <summary>
+    /// Sets the sensitivity of the player
+    /// </summary>
+    /// <param name="slider"></param>
+    public void SetSensitivity()
+    {
+        sensitivity = sensSlider.value;
+        PlayerPrefs.SetFloat("sens", sensitivity);
+    }
 
     /// <summary>
     /// Loads the game scene
@@ -20,6 +53,15 @@ public class MainMenuBehaviour : MonoBehaviour
     public void LoadGameScene()
     {
         SceneManager.LoadScene(sceneName);
+    }
+
+    /// <summary>
+    /// Loads the playerPref of the sensitivity
+    /// </summary>
+    private void LoadSensitivity()
+    {
+        sensitivity = PlayerPrefs.GetFloat("sens");
+        sensSlider.value = sensitivity;
     }
 
     /// <summary>
