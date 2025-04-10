@@ -22,7 +22,7 @@ public class PlayerBehavior : MonoBehaviour
     public float maxCrouchJumpPower = 10f;
     public float moveSpeed = 5f;
     public float airMoveSpeed = 2.5f;
-    
+    [Space(10)]
     public float rotationSpeed = 5f;
     public float dashPower = 100f;
     public float groundDashCooldown = 1f;
