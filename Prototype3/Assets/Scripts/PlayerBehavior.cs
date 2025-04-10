@@ -25,10 +25,7 @@ public class PlayerBehavior : MonoBehaviour
     public float airMoveSpeed = 2.5f;
     
     public float rotationSpeed = 5f;
-    public float dashPower = 100f;
     public float groundDashCooldown = 1f;
-    [Tooltip("Set between 0-1")]
-    public float groundDashReduction = 0.75f;
 
     private bool crouching = false;
     private bool crouchingMovment = false;
@@ -138,13 +135,13 @@ public class PlayerBehavior : MonoBehaviour
     {
         if(grounded() && canDashGround)
         {
-            playerAbilities.Dash(dashPower * groundDashReduction);
+            playerAbilities.Dash();
             canDashGround = false;
             StartCoroutine(GroundCooldown());
         }
         else if(!grounded() && canDashAir)
         {
-            playerAbilities.Dash(dashPower);
+            playerAbilities.Dash();
             canDashAir = false;
         }
     }
