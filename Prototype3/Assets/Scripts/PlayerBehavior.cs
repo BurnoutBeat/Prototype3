@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -21,8 +20,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool crouching = false;
     private bool crouchingMovment = false;
     private bool capsLockHeld = false;
-    private bool canDashGround = true;
-    private bool canDashAir = true;
+    private bool canDash = true;
 
     [Header("LOOKING")]
     public GameObject eyes; //camera
@@ -40,27 +38,18 @@ public class PlayerBehavior : MonoBehaviour
     public float airMoveSpeed = 2.5f;
     [Space(10)]
     [Header("DASH")]
-    public float dashPower = 100f;
-    public float groundDashCooldown = 1f;
-    [Tooltip("Set between 0-1")]
-    public float groundDashReduction = 0.75f;
-    [Space(10)]
-    [Header("PAUSE MENU")]
-    [SerializeField] private Slider sensSlider;
-    [SerializeField] private GameObject pauseMenu;
-
-
-
+    [SerializeField] GameObject dashIcon;
+    [SerializeField] GameObject noDashIcon;
+    [SerializeField] float dashCooldown = 1f;
+    
     private void Awake()
     {
-        Time.timeScale = 1;
         capsuleCollider = GetComponent<CapsuleCollider>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         inputActions = new PlayerControls();
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
-        LoadSensitivity();
     }
     private void FixedUpdate()
     {
@@ -149,16 +138,13 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if(grounded() && canDashGround)
+        if(canDash)
         {
-            playerAbilities.Dash(dashPower * groundDashReduction);
-            canDashGround = false;
-            StartCoroutine(GroundCooldown());
-        }
-        else if(!grounded() && canDashAir)
-        {
-            playerAbilities.Dash(dashPower);
-            canDashAir = false;
+            playerAbilities.Dash();
+            dashIcon.SetActive(false);
+            noDashIcon.SetActive(true);
+            canDash = false;
+            StartCoroutine(DashCooldown());
         }
     }
     private bool CanUncrouch() {
@@ -184,7 +170,6 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (hit.collider.gameObject != gameObject)
             {
-                canDashAir = true;
                 return true;
             }
         }
@@ -243,7 +228,6 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
         inputActions.PlayerActions.Dash.performed += OnDash;
-        inputActions.PlayerActions.Pause.started += Pause_started;
     }
     private void OnDisable()
     {
@@ -255,60 +239,14 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
         inputActions.PlayerActions.Dash.performed -= OnDash;
-        inputActions.PlayerActions.Pause.started -= Pause_started;
     }
 
-    private IEnumerator GroundCooldown()
+    private IEnumerator DashCooldown()
     {
-        yield return new WaitForSeconds(groundDashCooldown);
+        yield return new WaitForSeconds(dashCooldown);
 
-        canDashGround = true;
-    }
-
-    /// <summary>
-    /// Pauses the game
-    /// </summary>
-    /// <param name="obj"></param>
-    private void Pause_started(InputAction.CallbackContext obj)
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Time.timeScale = 0;
-        pauseMenu.SetActive(true);
-    }
-
-    /// <summary>
-    /// Resumes the game
-    /// </summary>
-    public void ResumeButton()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1;
-    }
-
-    /// <summary>
-    /// Returns to the main menu screen
-    /// </summary>
-    public void ReturnToMenuButton()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-
-    /// <summary>
-    /// Sets the sensitivity of the player
-    /// </summary>
-    /// <param name="slider"></param>
-    public void SetSensitivity()
-    {
-        rotationSpeed = sensSlider.value;
-        PlayerPrefs.SetFloat("sens", rotationSpeed);
-    }
-
-    /// <summary>
-    /// Loads the playerPref of the sensitivity
-    /// </summary>
-    private void LoadSensitivity()
-    {
-        rotationSpeed = PlayerPrefs.GetFloat("sens");
-        sensSlider.value = rotationSpeed;
+        dashIcon.SetActive(true);
+        noDashIcon.SetActive(false);
+        canDash = true;
     }
 }
