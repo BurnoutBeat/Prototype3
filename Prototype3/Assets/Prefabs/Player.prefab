@@ -288,18 +288,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eyes: {fileID: 884284286164930379}
-  jumpChargeMeter: {fileID: 0}
   maxLookAngle: 80
+  rotationSpeed: 50
+  jumpChargeMeter: {fileID: 0}
   jumpForce: 5
   crouchChargeTime: 2
   maxCrouchJumpPower: 10
   moveSpeed: 10
-  rotationSpeed: 50
-  crouchSpeed: 0.1
-  dashPower: 100
-  groundDashCooldown: 1
-  groundDashReduction: 0.75
-  crouching: 0
+  airMoveSpeed: 2.5
+  dashCooldown: 1
 --- !u!114 &1879785131524336585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,3 +311,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1040626721525340524}
   player: {fileID: 7035970617918173501}
+  dashDistance: 10
+  dashSpeed: 50
