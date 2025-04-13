@@ -38,7 +38,9 @@ public class PlayerBehavior : MonoBehaviour
     public float airMoveSpeed = 2.5f;
     [Space(10)]
     [Header("DASH")]
-    public float dashCooldown = 1f;
+    [SerializeField] GameObject dashIcon;
+    [SerializeField] GameObject noDashIcon;
+    [SerializeField] float dashCooldown = 1f;
     
     private void Awake()
     {
@@ -139,6 +141,8 @@ public class PlayerBehavior : MonoBehaviour
         if(canDash)
         {
             playerAbilities.Dash();
+            dashIcon.SetActive(false);
+            noDashIcon.SetActive(true);
             canDash = false;
             StartCoroutine(DashCooldown());
         }
@@ -241,6 +245,8 @@ public class PlayerBehavior : MonoBehaviour
     {
         yield return new WaitForSeconds(dashCooldown);
 
+        dashIcon.SetActive(true);
+        noDashIcon.SetActive(false);
         canDash = true;
     }
 }
