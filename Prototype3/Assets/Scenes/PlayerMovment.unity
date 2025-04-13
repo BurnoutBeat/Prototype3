@@ -1569,7 +1569,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1196812186}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b5c269c8000e8a74284b9759a91be674, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1693,12 +1693,13 @@ MonoBehaviour:
   eyes: {fileID: 330585543}
   jumpChargeMeter: {fileID: 619047533}
   maxLookAngle: 80
+  rotationSpeed: 50
+  moveSpeed: 10
+  airMoveSpeed: 2.5
   jumpForce: 5
   crouchChargeTime: 2
   maxCrouchJumpPower: 10
-  moveSpeed: 10
-  airMoveSpeed: 2.5
-  rotationSpeed: 50
+  infiniteSlide: 1
   dashPower: 100
   groundDashCooldown: 1
   groundDashReduction: 0.75
