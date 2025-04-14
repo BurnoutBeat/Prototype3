@@ -8,40 +8,47 @@ using UnityEngine.UI;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    [Header("LOOKING")]
+    public GameObject eyes; //camera
+    public Slider jumpChargeMeter;
+    public float maxLookAngle = 80f;
+    public float rotationSpeed = 5f;
+
+    [Space(10)]
+    [Header("MOVING")]
+    public float moveSpeed = 5f;
+    public float airMoveSpeed = 2.5f;
+    public float jumpForce = 10f;
+
+    [Space(10)]
+    [Header("CROUCHING")]
+    public float crouchChargeTime = 2f;
+    public float maxCrouchJumpPower = 10f;
+    public bool infiniteSlide = true;
+
+    [Space(10)]
+    [Header("Dashing")]
+    public float dashPower = 100f;
+    public float groundDashCooldown = 1f;
+    [Tooltip("Set between 0-1")]
+    public float groundDashReduction = 0.75f;
+
     private PlayerControls inputActions;
-    private PlayerAbilities playerAbilities;
     private CapsuleCollider capsuleCollider;
     private Rigidbody rb;
+    private PlayerAbilities playerAbilities;
     private Vector2 moveInput;
     private Vector2 lookDelta;
-    private float crouchStartTime;
-    private float chargeStrength;
-    private float verticalRotation = 0f;
+    private Vector3 lastVelocity;
     private bool crouching = false;
     private bool crouchingMovment = false;
     private bool capsLockHeld = false;
-    private bool canDash = true;
+    private bool canDashGround = true;
+    private bool canDashAir = true;
+    private float crouchStartTime;
+    private float verticalRotation = 0f;
+    private float chargeStrength;
 
-    [Header("LOOKING")]
-    public GameObject eyes; //camera
-    public float maxLookAngle = 80f;
-    public float rotationSpeed = 5f;
-    [Space(10)]
-    [Header("JUMPING")]
-    public Slider jumpChargeMeter;
-    public float jumpForce = 10f;
-    public float crouchChargeTime = 2f;
-    public float maxCrouchJumpPower = 10f;
-    [Space(10)]
-    [Header("MOVEMENT")]
-    public float moveSpeed = 5f;
-    public float airMoveSpeed = 2.5f;
-    [Space(10)]
-    [Header("DASH")]
-    [SerializeField] GameObject dashIcon;
-    [SerializeField] GameObject noDashIcon;
-    [SerializeField] float dashCooldown = 1f;
-    
     private void Awake()
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
@@ -99,7 +106,7 @@ public class PlayerBehavior : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
         if (crouching && !crouchingMovment) {
-            StandUp();
+            StandUp(lastVelocity);
         }
     }
     private void CrouchPerformed(InputAction.CallbackContext context)
@@ -107,6 +114,7 @@ public class PlayerBehavior : MonoBehaviour
         capsLockHeld = true;
         crouchStartTime = Time.time;
         if (grounded()) {
+            lastVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
             capsuleCollider.height = 1;
             capsuleCollider.center = new Vector3(0,-0.5f, 0);
             crouching = true;
@@ -119,14 +127,14 @@ public class PlayerBehavior : MonoBehaviour
     {
         capsLockHeld = false;
         if (crouching && CanUncrouch()) {
-            StandUp();
+            StandUp(Vector3.zero);
         }  
         else if (crouching)
         {
             crouchingMovment = true;
         }
     }
-    private void StandUp() {
+    private void StandUp(Vector3 vel) {
         capsuleCollider.height = 2;
         capsuleCollider.center = Vector3.zero;
         crouching = false;
@@ -134,17 +142,20 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y += 0.5f;
         eyes.transform.position = newPos;
-        rb.velocity = Vector2.zero;
+        rb.velocity = vel;
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if(canDash)
+        if(grounded() && canDashGround)
         {
-            playerAbilities.Dash();
-            dashIcon.SetActive(false);
-            noDashIcon.SetActive(true);
-            canDash = false;
-            StartCoroutine(DashCooldown());
+            playerAbilities.Dash(dashPower * groundDashReduction);
+            canDashGround = false;
+            StartCoroutine(GroundCooldown());
+        }
+        else if(!grounded() && canDashAir)
+        {
+            playerAbilities.Dash(dashPower);
+            canDashAir = false;
         }
     }
     private bool CanUncrouch() {
@@ -170,6 +181,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (hit.collider.gameObject != gameObject)
             {
+                canDashAir = true;
                 return true;
             }
         }
@@ -181,13 +193,11 @@ public class PlayerBehavior : MonoBehaviour
         moveDirection.Normalize();
         if (CanUncrouch() && !capsLockHeld && crouching)
         {
-            StandUp();
+            StandUp(Vector3.zero);
         }
         if (crouching) {
-            Vector3 flatVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
-            if (flatVelocity.magnitude > moveSpeed)
-            {
-                rb.velocity = new Vector3(flatVelocity.normalized.x * moveSpeed, rb.velocity.y, flatVelocity.normalized.z * moveSpeed);
+            if (infiniteSlide) {
+                rb.velocity = lastVelocity;
             }
             if (crouchingMovment) {
                 rb.AddForce(moveDirection * moveSpeed * 40f * Time.fixedDeltaTime);
@@ -206,7 +216,6 @@ public class PlayerBehavior : MonoBehaviour
             }
         } 
     }
-
     private void RotatePlayer(Vector2 lookInput)
     {
         if (lookInput.sqrMagnitude > 0.01f)
@@ -240,13 +249,10 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Look.performed -= OnLook;
         inputActions.PlayerActions.Dash.performed -= OnDash;
     }
-
-    private IEnumerator DashCooldown()
+    private IEnumerator GroundCooldown()
     {
-        yield return new WaitForSeconds(dashCooldown);
+        yield return new WaitForSeconds(groundDashCooldown);
 
-        dashIcon.SetActive(true);
-        noDashIcon.SetActive(false);
-        canDash = true;
+        canDashGround = true;
     }
 }
