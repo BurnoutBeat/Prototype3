@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PauseTesting.unity
     guid: c7dccd5f40c564749acb5d3e6ac7947f
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: 4a11a422f9d09f94e8e82f63f9baba71
   m_configObjects: {}
