@@ -14,7 +14,7 @@ public class PlayerAbilities : MonoBehaviour
         playerBehavior = GetComponent<PlayerBehavior>();
     }
 
-    public void Dash(float dashPower)
+    public void Dash()
     {
         StartCoroutine(DashRoutine());
     }
