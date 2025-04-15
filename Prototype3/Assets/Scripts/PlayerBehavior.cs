@@ -30,10 +30,9 @@ public class PlayerBehavior : MonoBehaviour
 
     [Space(10)]
     [Header("Dashing")]
-    public float dashPower = 100f;
-    public float groundDashCooldown = 1f;
-    [Tooltip("Set between 0-1")]
-    public float groundDashReduction = 0.75f;
+    [SerializeField] GameObject dashIcon;
+    [SerializeField] GameObject noDashIcon;
+    public float dashCooldown = 1f;
 
     [Space(10)]
     [Header("PAUSE MENU")]
@@ -50,8 +49,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool crouching = false;
     private bool crouchingMovment = false;
     private bool capsLockHeld = false;
-    private bool canDashGround = true;
-    private bool canDashAir = true;
+    private bool canDash = true;
     private float crouchStartTime;
     private float verticalRotation = 0f;
     private float chargeStrength;
@@ -161,16 +159,13 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if (grounded() && canDashGround)
+        if(canDash)
         {
-            playerAbilities.Dash(dashPower * groundDashReduction);
-            canDashGround = false;
-            StartCoroutine(GroundCooldown());
-        }
-        else if (!grounded() && canDashAir)
-        {
-            playerAbilities.Dash(dashPower);
-            canDashAir = false;
+            playerAbilities.Dash();
+            dashIcon.SetActive(false);
+            noDashIcon.SetActive(true);
+            canDash = false;
+            StartCoroutine(DashCooldown());
         }
     }
     private bool CanUncrouch()
@@ -198,7 +193,6 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (hit.collider.gameObject != gameObject)
             {
-                canDashAir = true;
                 return true;
             }
         }
@@ -276,11 +270,13 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Dash.performed -= OnDash;
         inputActions.PlayerActions.Pause.started -= Pause_started;
     }
-    private IEnumerator GroundCooldown()
+    private IEnumerator DashCooldown()
     {
-        yield return new WaitForSeconds(groundDashCooldown);
+        yield return new WaitForSeconds(dashCooldown);
 
-        canDashGround = true;
+        dashIcon.SetActive(true);
+        noDashIcon.SetActive(false);
+        canDash = true;
     }
 
     /// <summary>
