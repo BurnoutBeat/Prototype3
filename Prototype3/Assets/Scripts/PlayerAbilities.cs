@@ -4,7 +4,6 @@ using System.Collections;
 public class PlayerAbilities : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject player;
     [SerializeField] float dashDistance = 10f;
     [SerializeField] float dashSpeed = 50f;
     private PlayerBehavior playerBehavior;
@@ -21,7 +20,9 @@ public class PlayerAbilities : MonoBehaviour
 
     private IEnumerator DashRoutine()
     {
-        Vector3 dashDir = player.transform.forward;
+        rb.MovePosition(rb.position - transform.forward * 0.5f);
+
+        Vector3 dashDir = rb.transform.forward;
         dashDir.y = 0f;
         dashDir.Normalize();
 
@@ -43,8 +44,6 @@ public class PlayerAbilities : MonoBehaviour
 
             distanceTraveled += Vector3.Distance(rb.position, lastPosition);
             lastPosition = rb.position;
-
-            rb.velocity = (player.transform.forward * playerBehavior.moveSpeed);
 
             yield return null;
         }
