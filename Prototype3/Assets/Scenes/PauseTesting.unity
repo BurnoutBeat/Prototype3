@@ -223,6 +223,12 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!4 &154645216 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3267392151599723096, guid: 2926415d8266bb242938733482691a01,
+    type: 3}
+  m_PrefabInstance: {fileID: 771039352}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &209389125
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,6 +575,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: dashForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: playerCam
+      value: 
+      objectReference: {fileID: 154645216}
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: orientation
+      value: 
+      objectReference: {fileID: 1978260430}
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: dashDuration
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1086,6 +1112,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573cc803513fb3b4ea3fc22f0eb80c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1978260430 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
+    type: 3}
+  m_PrefabInstance: {fileID: 771039352}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2107055833 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9181867624405044631, guid: 0c601d847a7e20c45900f13f095be3d7,
