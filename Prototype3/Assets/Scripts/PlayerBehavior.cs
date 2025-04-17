@@ -208,9 +208,12 @@ public class PlayerBehavior : MonoBehaviour
         }
         if (crouching)
         {
-            if (infiniteSlide)
+            if (infiniteSlide && !crouchingMovment)
             {
                 rb.velocity = lastVelocity;
+            }
+            if (rb.velocity.magnitude < 0.2f) {
+                crouchingMovment = true;
             }
             if (crouchingMovment)
             {
@@ -219,7 +222,6 @@ public class PlayerBehavior : MonoBehaviour
         }
         else
         {
-
             if (grounded())
             {
                 rb.AddForce(moveDirection * moveSpeed * 100f * Time.fixedDeltaTime);
