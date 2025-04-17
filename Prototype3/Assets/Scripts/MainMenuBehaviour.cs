@@ -61,7 +61,12 @@ public class MainMenuBehaviour : MonoBehaviour
     private void LoadSensitivity()
     {
         sensitivity = PlayerPrefs.GetFloat("sens");
-        sensSlider.value = sensitivity;
+        
+        if (sensitivity < 10) {
+            SetSensitivity();
+        } else {
+            sensSlider.value = sensitivity;
+        }
     }
 
     /// <summary>
