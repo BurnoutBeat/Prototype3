@@ -106,15 +106,15 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (grounded() && (crouching && !crouchingMovment))
+        if (grounded() && crouching)
         {
             rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
         }
-        else if (grounded() && !crouchingMovment)
+        else if (grounded())
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-        if (crouching && !crouchingMovment)
+        if (crouching && CanUncrouch())
         {
             StandUp(lastVelocity);
         }
