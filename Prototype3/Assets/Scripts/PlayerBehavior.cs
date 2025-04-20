@@ -25,6 +25,7 @@ public class PlayerBehavior : MonoBehaviour
     [Space(10)]
     [Header("CROUCHING")]
     public float crouchChargeTime = 2f;
+    public float uncrouchChargeTime = 2f;
     public float maxCrouchJumpPower = 10f;
     public bool infiniteSlide = true;
 
@@ -74,16 +75,21 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (crouching)
         {
-            chargeStrength = (Time.time - crouchStartTime) / crouchChargeTime;
+            chargeStrength += crouchChargeTime * Time.deltaTime;
             if (chargeStrength > 1)
             {
                 chargeStrength = 1;
             }
             jumpChargeMeter.value = chargeStrength * 100;
         }
-        else
+        else 
         {
-            jumpChargeMeter.value = 0;
+            chargeStrength -= uncrouchChargeTime * Time.deltaTime;
+            if (chargeStrength < 0)
+            {
+                chargeStrength = 0;
+            }
+            jumpChargeMeter.value = chargeStrength * 100;
         }
     }
     private void OnMovePerformed(InputAction.CallbackContext context)
@@ -106,13 +112,10 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (grounded() && crouching)
+        if (grounded())
         {
+            print(chargeStrength);
             rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
-        }
-        else if (grounded())
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
         if (crouching && CanUncrouch())
         {

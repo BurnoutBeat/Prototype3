@@ -163,7 +163,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""fee00e67-64aa-4df3-9c42-1a26fdba8975"",
-                    ""path"": ""<Keyboard>/capsLock"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
