@@ -1036,7 +1036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 902cb1c29ed215346816300d38b24606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playScene: PlayerMovment
+  playScene: TestLevel
   MainMenu: MainMenu
 --- !u!1 &2030731429
 GameObject:
