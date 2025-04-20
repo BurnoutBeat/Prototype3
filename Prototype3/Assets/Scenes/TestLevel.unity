@@ -16248,7 +16248,8 @@ MonoBehaviour:
   moveSpeed: 10
   airMoveSpeed: 2.5
   jumpForce: 6
-  crouchChargeTime: 2
+  crouchChargeTime: 0.5
+  uncrouchChargeTime: 2
   maxCrouchJumpPower: 12.5
   infiniteSlide: 1
   dashIcon: {fileID: 935046649}
