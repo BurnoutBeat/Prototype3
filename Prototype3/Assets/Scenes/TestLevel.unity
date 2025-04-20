@@ -16245,12 +16245,12 @@ MonoBehaviour:
   jumpChargeMeter: {fileID: 1595183359}
   maxLookAngle: 80
   rotationSpeed: 5
-  moveSpeed: 10
+  moveSpeed: 14
   airMoveSpeed: 2.5
   jumpForce: 6
   fallingGravity: 1.5
-  crouchChargeTime: 0.5
-  uncrouchChargeTime: 2
+  crouchChargeTime: 0.8
+  uncrouchChargeTime: 0.25
   maxCrouchJumpPower: 12.5
   infiniteSlide: 1
   dashIcon: {fileID: 935046649}
