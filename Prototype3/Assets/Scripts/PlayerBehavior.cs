@@ -30,6 +30,7 @@ public class PlayerBehavior : MonoBehaviour
     public float uncrouchChargeTime = 2f;
     public float maxCrouchJumpPower = 10f;
     public bool infiniteSlide = true;
+    public bool boostedCharge = false;
 
     [Space(10)]
     [Header("Dashing")]
@@ -52,6 +53,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool crouching = false;
     private bool crouchingMovment = false;
     private bool capsLockHeld = false;
+    private float crouchStartTime;
     private bool canDash = true;
     private float verticalRotation = 0f;
     private float chargeStrength;
@@ -124,6 +126,9 @@ public class PlayerBehavior : MonoBehaviour
             if (chargeStrength > 1)
             {
                 chargeStrength = 1;
+            } else if (chargeStrength > 1 && boostedCharge)
+            {
+                chargeStrength = 1.5f;
             }
             jumpChargeMeter.value = chargeStrength * 100;
         }
@@ -170,6 +175,23 @@ public class PlayerBehavior : MonoBehaviour
     private void CrouchPerformed(InputAction.CallbackContext context)
     {
         capsLockHeld = true;
+
+        crouchStartTime = Time.time;
+        if (grounded())
+        {
+            lastVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
+            capsuleCollider.height = 1;
+            capsuleCollider.center = new Vector3(0, -0.5f, 0);
+            Vector3 newPos = transform.position;
+            newPos.y -= 0.5f;
+            eyes.transform.position = newPos;
+            crouching = true;
+
+        }
+        else if(!grounded())
+        {
+
+        }
     }
 
     private void CrouchCancled(InputAction.CallbackContext context)
@@ -190,9 +212,12 @@ public class PlayerBehavior : MonoBehaviour
         crouchingMovment = false;
         capsuleCollider.height = 2;
         capsuleCollider.center = Vector3.zero;
+        crouching = false;
+        crouchingMovment = false;
         Vector3 newPos = transform.position;
         newPos.y += 0.5f;
         eyes.transform.position = newPos;
+        boostedCharge = false;
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
@@ -248,10 +273,16 @@ public class PlayerBehavior : MonoBehaviour
             if (infiniteSlide && !crouchingMovment)
             {
                 rb.velocity = new Vector3(lastVelocity.x, rb.velocity.y, lastVelocity.z);
+                Vector3 moveVel = rb.velocity;
+                if (rb.velocity.magnitude >= 0.5f)
+                {
+                    boostedCharge = true;
+                }
             }
             if (crouchingMovment)
             {
                 rb.AddForce(moveDirection * moveSpeed * 80f * Time.fixedDeltaTime);
+                rb.AddForce(moveDirection * moveSpeed * 60f * Time.fixedDeltaTime);
             }
         }
         else
