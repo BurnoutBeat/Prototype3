@@ -12,6 +12,7 @@ using UnityEngine;
 public class Animated
 {
     public Animator animator;
+    public Animation animation;
 
     public enum ParamType
     {
@@ -22,6 +23,11 @@ public class Animated
     }
 
     public ParamType paramType;
+    public string paramName;
+
+    public float floatValue;
+    public int intValue;
+    public bool boolValue;
 
     public string animationName;
 }
