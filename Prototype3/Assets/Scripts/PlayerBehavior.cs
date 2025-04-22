@@ -30,6 +30,7 @@ public class PlayerBehavior : MonoBehaviour
     public float uncrouchChargeTime = 2f;
     public float maxCrouchJumpPower = 10f;
     public bool infiniteSlide = true;
+    public bool boostedCharge = false;
 
     [Space(10)]
     [Header("Dashing")]
@@ -91,6 +92,9 @@ public class PlayerBehavior : MonoBehaviour
             if (chargeStrength > 1)
             {
                 chargeStrength = 1;
+            } else if (chargeStrength > 1 && boostedCharge)
+            {
+                chargeStrength = 1.5f;
             }
             jumpChargeMeter.value = chargeStrength * 100;
         }
@@ -143,10 +147,15 @@ public class PlayerBehavior : MonoBehaviour
             lastVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
             capsuleCollider.height = 1;
             capsuleCollider.center = new Vector3(0, -0.5f, 0);
-            crouching = true;
             Vector3 newPos = transform.position;
             newPos.y -= 0.5f;
             eyes.transform.position = newPos;
+            crouching = true;
+
+        }
+        else if(!grounded())
+        {
+
         }
     }
     private void CrouchCancled(InputAction.CallbackContext context)
@@ -171,6 +180,7 @@ public class PlayerBehavior : MonoBehaviour
         newPos.y += 0.5f;
         eyes.transform.position = newPos;
         rb.velocity = vel;
+        boostedCharge = false;
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
@@ -226,13 +236,18 @@ public class PlayerBehavior : MonoBehaviour
             if (infiniteSlide && !crouchingMovment)
             {
                 rb.velocity = new Vector3(lastVelocity.x, rb.velocity.y, lastVelocity.z);
+                Vector3 moveVel = rb.velocity;
+                if (rb.velocity.magnitude >= 0.5f)
+                {
+                    boostedCharge = true;
+                }
             }
             if (rb.velocity.magnitude < 0.2f) {
                 crouchingMovment = true;
             }
             if (crouchingMovment)
             {
-                rb.AddForce(moveDirection * moveSpeed * 40f * Time.fixedDeltaTime);
+                rb.AddForce(moveDirection * moveSpeed * 60f * Time.fixedDeltaTime);
             }
         }
         else

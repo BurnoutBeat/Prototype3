@@ -20,7 +20,10 @@ public class PlayerAbilities : MonoBehaviour
 
     private IEnumerator DashRoutine()
     {
-        rb.MovePosition(rb.position - transform.forward * 0.5f);
+        rb.AddForce(transform.forward * dashSpeed);
+        rb.AddForce(transform.up * dashDistance);
+        yield return null;
+        /*rb.MovePosition(rb.position - transform.forward * 0.5f);
 
         Vector3 dashDir = rb.transform.forward;
         dashDir.y = 0f;
@@ -46,6 +49,6 @@ public class PlayerAbilities : MonoBehaviour
             lastPosition = rb.position;
 
             yield return null;
-        }
+        }*/
     }
 }
