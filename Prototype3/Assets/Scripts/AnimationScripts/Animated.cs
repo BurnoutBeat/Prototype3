@@ -12,22 +12,9 @@ using UnityEngine;
 public class Animated
 {
     public Animator animator;
-    public Animation animation;
+    public AnimationClip animation;
 
-    public enum ParamType
-    {
-        Float,
-        Int,
-        Bool,
-        Trigger
-    }
-
-    public ParamType paramType;
     public string paramName;
-
-    public float floatValue;
-    public int intValue;
-    public bool boolValue;
 
     public string animationName;
 }
