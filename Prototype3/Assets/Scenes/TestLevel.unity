@@ -16481,6 +16481,7 @@ MonoBehaviour:
   moveSpeed: 10
   airMoveSpeed: 2.5
   jumpForce: 6
+  fallingGravity: 1.5
   crouchChargeTime: 0.5
   uncrouchChargeTime: 2
   maxCrouchJumpPower: 12.5

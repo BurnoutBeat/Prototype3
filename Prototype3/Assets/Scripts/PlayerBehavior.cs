@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class PlayerBehavior : MonoBehaviour
     public float moveSpeed = 5f;
     public float airMoveSpeed = 2.5f;
     public float jumpForce = 10f;
+    public float fallingGravity = 2f;
 
     [Space(10)]
     [Header("CROUCHING")]
@@ -70,7 +72,17 @@ public class PlayerBehavior : MonoBehaviour
     {
         MovePlayer();
         UpdateJumpChargeSlider();
+        ApplyGravity();
     }
+
+    private void ApplyGravity()
+    {
+        if (rb.velocity.y <= 0) {
+            Vector3 gravity = Physics.gravity * fallingGravity;
+            rb.AddForce(gravity, ForceMode.Acceleration);
+        }
+    }
+
     private void UpdateJumpChargeSlider()
     {
         if (crouching)
@@ -213,7 +225,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (infiniteSlide && !crouchingMovment)
             {
-                rb.velocity = lastVelocity;
+                rb.velocity = new Vector3(lastVelocity.x, rb.velocity.y, lastVelocity.z);
             }
             if (rb.velocity.magnitude < 0.2f) {
                 crouchingMovment = true;
