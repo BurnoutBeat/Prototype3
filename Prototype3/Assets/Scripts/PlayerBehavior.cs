@@ -30,6 +30,7 @@ public class PlayerBehavior : MonoBehaviour
     public float uncrouchChargeTime = 2f;
     public float maxCrouchJumpPower = 10f;
     public bool infiniteSlide = true;
+    public bool boostedCharge = false;
 
     [Space(10)]
     [Header("Dashing")]
@@ -52,8 +53,8 @@ public class PlayerBehavior : MonoBehaviour
     private bool crouching = false;
     private bool crouchingMovment = false;
     private bool capsLockHeld = false;
-    private bool canDash = true;
     private float crouchStartTime;
+    private bool canDash = true;
     private float verticalRotation = 0f;
     private float chargeStrength;
 
@@ -73,8 +74,42 @@ public class PlayerBehavior : MonoBehaviour
         MovePlayer();
         UpdateJumpChargeSlider();
         ApplyGravity();
+        if (ShouldCrouch()) {
+            StartCrouch();
+        } else {
+            EndCrouch();
+        }
     }
+    private bool ShouldCrouch() {
+        if (grounded() && capsLockHeld)
+        {
+            lastVelocity = rb.velocity;
+            return true;
+        }
+        return false;
+    }
+    private void StartCrouch()
+    {
+        crouching = true;
+        lastVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
 
+        capsuleCollider.height = 1;
+        capsuleCollider.center = new Vector3(0, -0.5f, 0);
+        Vector3 newPos = transform.position;
+        newPos.y -= 0.5f;
+        eyes.transform.position = newPos;
+    }
+    private void EndCrouch()
+    {
+        if (CanUncrouch())
+        {
+            crouching = false;
+            StandUp();
+        } else if (rb.velocity.magnitude < 0.2f)
+        {
+            crouchingMovment = true;
+        }
+    }
     private void ApplyGravity()
     {
         if (rb.velocity.y <= 0) {
@@ -91,6 +126,9 @@ public class PlayerBehavior : MonoBehaviour
             if (chargeStrength > 1)
             {
                 chargeStrength = 1;
+            } else if (chargeStrength > 1 && boostedCharge)
+            {
+                chargeStrength = 1.5f;
             }
             jumpChargeMeter.value = chargeStrength * 100;
         }
@@ -131,38 +169,47 @@ public class PlayerBehavior : MonoBehaviour
         }
         if (crouching && CanUncrouch())
         {
-            StandUp(lastVelocity);
+            StandUp();
         }
     }
     private void CrouchPerformed(InputAction.CallbackContext context)
     {
         capsLockHeld = true;
+
         crouchStartTime = Time.time;
         if (grounded())
         {
             lastVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
             capsuleCollider.height = 1;
             capsuleCollider.center = new Vector3(0, -0.5f, 0);
-            crouching = true;
             Vector3 newPos = transform.position;
             newPos.y -= 0.5f;
             eyes.transform.position = newPos;
+            crouching = true;
+
+        }
+        else if(!grounded())
+        {
+
         }
     }
+
     private void CrouchCancled(InputAction.CallbackContext context)
     {
         capsLockHeld = false;
         if (crouching && CanUncrouch())
         {
-            StandUp(Vector3.zero);
+            StandUp();
         }
         else if (crouching)
         {
             crouchingMovment = true;
         }
     }
-    private void StandUp(Vector3 vel)
+    private void StandUp()
     {
+        crouching = false;
+        crouchingMovment = false;
         capsuleCollider.height = 2;
         capsuleCollider.center = Vector3.zero;
         crouching = false;
@@ -170,7 +217,7 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y += 0.5f;
         eyes.transform.position = newPos;
-        rb.velocity = vel;
+        boostedCharge = false;
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
@@ -219,20 +266,23 @@ public class PlayerBehavior : MonoBehaviour
         moveDirection.Normalize();
         if (CanUncrouch() && !capsLockHeld && crouching)
         {
-            StandUp(Vector3.zero);
+            StandUp();
         }
         if (crouching)
         {
             if (infiniteSlide && !crouchingMovment)
             {
                 rb.velocity = new Vector3(lastVelocity.x, rb.velocity.y, lastVelocity.z);
-            }
-            if (rb.velocity.magnitude < 0.2f) {
-                crouchingMovment = true;
+                Vector3 moveVel = rb.velocity;
+                if (rb.velocity.magnitude >= 0.5f)
+                {
+                    boostedCharge = true;
+                }
             }
             if (crouchingMovment)
             {
-                rb.AddForce(moveDirection * moveSpeed * 40f * Time.fixedDeltaTime);
+                rb.AddForce(moveDirection * moveSpeed * 80f * Time.fixedDeltaTime);
+                rb.AddForce(moveDirection * moveSpeed * 60f * Time.fixedDeltaTime);
             }
         }
         else
