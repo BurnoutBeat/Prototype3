@@ -291,15 +291,20 @@ MonoBehaviour:
   jumpChargeMeter: {fileID: 0}
   maxLookAngle: 80
   rotationSpeed: 50
-  moveSpeed: 10
-  airMoveSpeed: 2.5
+  moveSpeed: 20
+  airMoveSpeed: 15
   jumpForce: 5
+  fallingGravity: 2
   crouchChargeTime: 2
+  uncrouchChargeTime: 2
   maxCrouchJumpPower: 10
   infiniteSlide: 1
+  boostedCharge: 0
   dashIcon: {fileID: 0}
   noDashIcon: {fileID: 0}
   dashCooldown: 1
+  sensSlider: {fileID: 0}
+  pauseMenu: {fileID: 0}
 --- !u!114 &1879785131524336585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,6 +318,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1040626721525340524}
-  player: {fileID: 7035970617918173501}
-  dashDistance: 10
-  dashSpeed: 50
+  dashDistance: 100
+  dashSpeed: 3200

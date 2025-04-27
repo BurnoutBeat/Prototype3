@@ -53,8 +53,8 @@ public class PlayerBehavior : MonoBehaviour
     private bool crouching = false;
     private bool crouchingMovment = false;
     private bool capsLockHeld = false;
-    private bool canDash = true;
     private float crouchStartTime;
+    private bool canDash = true;
     private float verticalRotation = 0f;
     private float chargeStrength;
 
@@ -74,8 +74,42 @@ public class PlayerBehavior : MonoBehaviour
         MovePlayer();
         UpdateJumpChargeSlider();
         ApplyGravity();
+        if (ShouldCrouch()) {
+            StartCrouch();
+        } else {
+            EndCrouch();
+        }
     }
+    private bool ShouldCrouch() {
+        if (grounded() && capsLockHeld)
+        {
+            lastVelocity = rb.velocity;
+            return true;
+        }
+        return false;
+    }
+    private void StartCrouch()
+    {
+        crouching = true;
+        lastVelocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
 
+        capsuleCollider.height = 1;
+        capsuleCollider.center = new Vector3(0, -0.5f, 0);
+        Vector3 newPos = transform.position;
+        newPos.y -= 0.5f;
+        eyes.transform.position = newPos;
+    }
+    private void EndCrouch()
+    {
+        if (CanUncrouch())
+        {
+            crouching = false;
+            StandUp();
+        } else if (rb.velocity.magnitude < 0.2f)
+        {
+            crouchingMovment = true;
+        }
+    }
     private void ApplyGravity()
     {
         if (rb.velocity.y <= 0) {
@@ -135,12 +169,13 @@ public class PlayerBehavior : MonoBehaviour
         }
         if (crouching && CanUncrouch())
         {
-            StandUp(lastVelocity);
+            StandUp();
         }
     }
     private void CrouchPerformed(InputAction.CallbackContext context)
     {
         capsLockHeld = true;
+
         crouchStartTime = Time.time;
         if (grounded())
         {
@@ -158,20 +193,23 @@ public class PlayerBehavior : MonoBehaviour
 
         }
     }
+
     private void CrouchCancled(InputAction.CallbackContext context)
     {
         capsLockHeld = false;
         if (crouching && CanUncrouch())
         {
-            StandUp(Vector3.zero);
+            StandUp();
         }
         else if (crouching)
         {
             crouchingMovment = true;
         }
     }
-    private void StandUp(Vector3 vel)
+    private void StandUp()
     {
+        crouching = false;
+        crouchingMovment = false;
         capsuleCollider.height = 2;
         capsuleCollider.center = Vector3.zero;
         crouching = false;
@@ -179,7 +217,6 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y += 0.5f;
         eyes.transform.position = newPos;
-        rb.velocity = vel;
         boostedCharge = false;
     }
     private void OnDash(InputAction.CallbackContext ctx)
@@ -229,7 +266,7 @@ public class PlayerBehavior : MonoBehaviour
         moveDirection.Normalize();
         if (CanUncrouch() && !capsLockHeld && crouching)
         {
-            StandUp(Vector3.zero);
+            StandUp();
         }
         if (crouching)
         {
@@ -242,11 +279,9 @@ public class PlayerBehavior : MonoBehaviour
                     boostedCharge = true;
                 }
             }
-            if (rb.velocity.magnitude < 0.2f) {
-                crouchingMovment = true;
-            }
             if (crouchingMovment)
             {
+                rb.AddForce(moveDirection * moveSpeed * 80f * Time.fixedDeltaTime);
                 rb.AddForce(moveDirection * moveSpeed * 60f * Time.fixedDeltaTime);
             }
         }

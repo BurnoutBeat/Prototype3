@@ -8826,6 +8826,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: dashSpeed
+      value: 3200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: dashDistance
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8883,6 +8893,11 @@ PrefabInstance:
       objectReference: {fileID: 2067100746}
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
+      propertyPath: moveSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 2067100744}
@@ -8896,6 +8911,11 @@ PrefabInstance:
       propertyPath: sensSlider
       value: 
       objectReference: {fileID: 2067100743}
+    - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: airMoveSpeed
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: jumpChargeMeter
