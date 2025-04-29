@@ -38,7 +38,7 @@ public class SoundManager : MonoBehaviour
             //Adds the audio source to the clip that will be played
             i.source = temp.AddComponent<AudioSource>();
             i.source.outputAudioMixerGroup = i.mixer;
-            i.source.volume = i.maxVolume;
+            i.source.volume = 1;
             i.source.pitch = i.pitch;
             i.source.playOnAwake = false;
             i.source.loop = i.willLoop;
@@ -55,7 +55,7 @@ public class SoundManager : MonoBehaviour
         //Finds the audio clip that has the same name
         SFX sfx = audioClips[audioClips.FindIndex(i => i.audioName == name)];
         sfx.source.clip = sfx.clips[Random.Range(0, sfx.clips.Length)];
-        sfx.source.PlayOneShot(sfx.source.clip);
+        sfx.source.PlayOneShot(sfx.source.clip, sfx.maxVolume);
     }
 
     /// <summary>
