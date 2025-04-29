@@ -166,6 +166,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             print(chargeStrength);
             rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
+            SoundManager.Instance.PlaySFX("Jump");
         }
         if (crouching && CanUncrouch())
         {
@@ -228,6 +229,7 @@ public class PlayerBehavior : MonoBehaviour
             noDashIcon.SetActive(true);
             canDash = false;
             StartCoroutine(DashCooldown());
+            SoundManager.Instance.PlaySFX("Dash");
         }
     }
     private bool CanUncrouch()

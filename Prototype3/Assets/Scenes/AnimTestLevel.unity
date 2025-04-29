@@ -11039,7 +11039,7 @@ PrefabInstance:
     - target: {fileID: 3627468200653823418, guid: 7bcab9d3ab1e4e141853062290037a2a,
         type: 3}
       propertyPath: clips.Array.data[0].paramName
-      value: switch
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3627468200653823418, guid: 7bcab9d3ab1e4e141853062290037a2a,
         type: 3}
@@ -11049,7 +11049,7 @@ PrefabInstance:
     - target: {fileID: 3627468200653823418, guid: 7bcab9d3ab1e4e141853062290037a2a,
         type: 3}
       propertyPath: clips.Array.data[1].paramName
-      value: switch
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3627468200653823418, guid: 7bcab9d3ab1e4e141853062290037a2a,
         type: 3}
