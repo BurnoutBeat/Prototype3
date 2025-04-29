@@ -72,3 +72,12 @@ MonoBehaviour:
     pitch: 1
     willLoop: 0
     source: {fileID: 0}
+  - audioName: Walk
+    clips:
+    - {fileID: 8300000, guid: b6be21901a6b7d04bb332e1c06aed829, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: 5902632444716894904, guid: ea988012648d171429f899534e82f885, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 1
+    source: {fileID: 0}

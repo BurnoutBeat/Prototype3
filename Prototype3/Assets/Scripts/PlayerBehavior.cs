@@ -57,7 +57,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool canDash = true;
     private float verticalRotation = 0f;
     private float chargeStrength;
-    bool leftGround;
+    bool leftGround, moving;
 
     private void Awake()
     {
@@ -70,6 +70,7 @@ public class PlayerBehavior : MonoBehaviour
         playerAbilities = GetComponent<PlayerAbilities>();
         LoadSensitivity();
         leftGround = false;
+        moving = false;
     }
     private void FixedUpdate()
     {
@@ -158,9 +159,21 @@ public class PlayerBehavior : MonoBehaviour
     {
         print("moved");
         moveInput = context.ReadValue<Vector2>();
+        if(!moving && grounded())
+        {
+            moving = true;
+            SoundManager.Instance.PlaySFX("Walk");
+        }
+        else if(!grounded())
+        {
+            moving = false;
+            SoundManager.Instance.StopSFX("Walk");
+        }
     }
     private void OnMoveCanceled(InputAction.CallbackContext context)
     {
+        SoundManager.Instance.StopSFX("Walk");
+        moving = false;
         moveInput = Vector2.zero;
         if (!crouching)
         {
