@@ -16474,10 +16474,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573cc803513fb3b4ea3fc22f0eb80c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usingControler: 1
   eyes: {fileID: 330585543}
   jumpChargeMeter: {fileID: 1595183359}
   maxLookAngle: 80
-  rotationSpeed: 5
+  rotationSpeed: 50
   moveSpeed: 20
   airMoveSpeed: 15
   jumpForce: 8

@@ -11,6 +11,7 @@ using System;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    public bool usingControler = false;
     [Header("LOOKING")]
     public GameObject eyes; //camera
     public Slider jumpChargeMeter;
@@ -73,6 +74,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         MovePlayer();
         UpdateJumpChargeSlider();
+        if (usingControler)
+        {
+            RotatePlayer(lookDelta);
+        }
         ApplyGravity();
         if (ShouldCrouch()) {
             StartCrouch();
@@ -158,7 +163,13 @@ public class PlayerBehavior : MonoBehaviour
     private void OnLook(InputAction.CallbackContext context)
     {
         lookDelta = context.ReadValue<Vector2>();
-        RotatePlayer(lookDelta);
+        if (!usingControler) {
+            RotatePlayer(lookDelta);
+        }
+    }
+    private void LookStopped(InputAction.CallbackContext context)
+    {
+        lookDelta = Vector2.zero;
     }
     private void OnJump(InputAction.CallbackContext context)
     {
@@ -322,6 +333,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
+        inputActions.PlayerActions.Look.canceled += LookStopped;
         inputActions.PlayerActions.Dash.performed += OnDash;
         inputActions.PlayerActions.Pause.started += Pause_started;
     }
@@ -334,6 +346,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
+        inputActions.PlayerActions.Look.canceled -= LookStopped;
         inputActions.PlayerActions.Dash.performed -= OnDash;
         inputActions.PlayerActions.Pause.started -= Pause_started;
     }
