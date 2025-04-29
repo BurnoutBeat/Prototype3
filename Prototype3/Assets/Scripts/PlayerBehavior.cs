@@ -57,6 +57,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool canDash = true;
     private float verticalRotation = 0f;
     private float chargeStrength;
+    bool leftGround;
 
     private void Awake()
     {
@@ -68,6 +69,7 @@ public class PlayerBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
         LoadSensitivity();
+        leftGround = false;
     }
     private void FixedUpdate()
     {
@@ -78,6 +80,16 @@ public class PlayerBehavior : MonoBehaviour
             StartCrouch();
         } else {
             EndCrouch();
+        }
+
+        if(grounded() && leftGround)
+        {
+            leftGround = false;
+            SoundManager.Instance.PlaySFX("Land");
+        }
+        else if(!grounded())
+        {
+            leftGround = true;
         }
     }
     private bool ShouldCrouch() {
