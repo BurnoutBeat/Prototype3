@@ -5974,6 +5974,7 @@ MonoBehaviour:
   creditsButton: {fileID: 1410716818}
   settingsButton: {fileID: 1343855698}
   returnToMenuButton: {fileID: 923712750}
+  mixer: {fileID: 24100000, guid: ea988012648d171429f899534e82f885, type: 2}
   howToPlayMenu: {fileID: 2088370829}
   howToPlayBack: {fileID: 159311710}
   settingsMenu: {fileID: 1950883071}
