@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using Unity.VisualScripting;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -209,15 +210,17 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (grounded())
-        {
-            print(chargeStrength);
-            rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
-            SoundManager.Instance.PlaySFX("Jump");
-        }
-        if (crouching && CanUncrouch())
-        {
-            StandUp();
+        if (!pauseMenu.activeSelf) {
+            if (grounded())
+            {
+                print(chargeStrength);
+                rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
+                SoundManager.Instance.PlaySFX("Jump");
+            }
+            if (crouching && CanUncrouch())
+            {
+                StandUp();
+            }
         }
     }
     private void CrouchPerformed(InputAction.CallbackContext context)
@@ -269,14 +272,16 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if(canDash)
-        {
-            playerAbilities.Dash();
-            dashIcon.SetActive(false);
-            noDashIcon.SetActive(true);
-            canDash = false;
-            StartCoroutine(DashCooldown());
-            SoundManager.Instance.PlaySFX("Dash");
+        if (!pauseMenu.activeSelf) {
+            if (canDash)
+            {
+                playerAbilities.Dash();
+                dashIcon.SetActive(false);
+                noDashIcon.SetActive(true);
+                canDash = false;
+                StartCoroutine(DashCooldown());
+                SoundManager.Instance.PlaySFX("Dash");
+            }
         }
     }
     private bool CanUncrouch()
