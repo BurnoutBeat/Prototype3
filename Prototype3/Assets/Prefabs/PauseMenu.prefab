@@ -471,10 +471,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 370652202660070264}
   m_HandleRect: {fileID: 8617038065428410290}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -2948,10 +2948,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 4352396360746593042}
   m_HandleRect: {fileID: 6981214633236960762}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3162,10 +3162,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 8613557937196623953}
   m_HandleRect: {fileID: 4856151427690602866}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -4707,9 +4707,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuScene: MainMenu
+  playScene: FinalLevel
   mainMenu: {fileID: 6231271234594513205}
   resumeButton: {fileID: 1305595429823013473}
   howToPlayButton: {fileID: 3251331279736345608}
+  creditsButton: {fileID: 0}
   settingsButton: {fileID: 8514997543158912892}
   returnToMenuButton: {fileID: 3420549669886117811}
   howToPlayMenu: {fileID: 223537913530240807}
@@ -4720,6 +4722,8 @@ MonoBehaviour:
   sfxVolumeSlider: {fileID: 7504638675947383985}
   sensitivitySlider: {fileID: 8764276722181175012}
   settingsBack: {fileID: 1169067541667582558}
+  creditsMenu: {fileID: 0}
+  creditsBack: {fileID: 0}
 --- !u!1 &8966859500039669582
 GameObject:
   m_ObjectHideFlags: 0
