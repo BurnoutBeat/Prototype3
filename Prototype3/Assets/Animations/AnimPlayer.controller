@@ -78,14 +78,14 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-6728208312400327088
+--- !u!1102 &-3537322596817824441
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SlideFull
+  m_Name: Dash
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -98,7 +98,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ec877e2558f9f4040a66718b110e0fc6, type: 2}
+  m_Motion: {fileID: 7400000, guid: a92937e35c14d41428ec881b4b85a72a, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -266,7 +266,7 @@ AnimatorStateMachine:
     m_State: {fileID: 3804492806274498711}
     m_Position: {x: 230, y: 470, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -6728208312400327088}
+    m_State: {fileID: -3537322596817824441}
     m_Position: {x: 265, y: 535, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
