@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEditor;
+using UnityEngine.Audio;
 
 public class PauseMenuBehavior : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class PauseMenuBehavior : MonoBehaviour
     public GameObject creditsButton;
     public GameObject settingsButton;
     public GameObject returnToMenuButton;
+    [SerializeField] AudioMixer mixer;
 
     [Header("HOW_TO_PLAY")]
     public GameObject howToPlayMenu;
@@ -39,6 +41,10 @@ public class PauseMenuBehavior : MonoBehaviour
     [Space(2)]
     public Button creditsBack;
 
+    private void Awake()
+    {
+        LoadSettings();
+    }
     public void EscapePressed()
     {
         if (SceneManager.GetActiveScene().name != "MainMenu") {
@@ -86,6 +92,91 @@ public class PauseMenuBehavior : MonoBehaviour
     public void UpdateSensitivity()
     {
         PlayerPrefs.SetFloat("sens", sensitivitySlider.value);
+    }
+    public void SetAudioSlider(Slider slider)
+    {
+        float volume = slider.value;
+
+        string s = "";
+
+        if (slider.name.Contains("Master"))
+        {
+            s = "master";
+        }
+        else if (slider.name.Contains("Music"))
+        {
+            s = "music";
+        }
+        else if (slider.name.Contains("SFX"))
+        {
+            s = "sfx";
+        }
+
+        mixer.SetFloat(s, Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat(s, volume);
+    }
+
+    private void LoadSettings()
+    {
+        LoadVolume(masterVolumeSlider, "master");
+        LoadVolume(musicVolumeSlider, "music");
+        LoadVolume(sfxVolumeSlider, "sfx");
+        //Slider[] sliders = FindObjectsOfType<Slider>();
+        //Debug.Log(sliders.Length);
+
+        //foreach (Slider i in sliders)
+        //{
+        //    if (i.name.Contains("Master"))
+        //    {
+        //        if (PlayerPrefs.HasKey("master"))
+        //        {
+        //            LoadVolume(i, "master");
+        //        }
+        //        else
+        //        {
+        //            SetAudioSlider(i);
+        //        }
+        //    }
+        //    else if (i.name.Contains("Music"))
+        //    {
+        //        if (PlayerPrefs.HasKey("music"))
+        //        {
+        //            LoadVolume(i, "music");
+        //        }
+        //        else
+        //        {
+        //            SetAudioSlider(i);
+        //        }
+        //    }
+        //    else if (i.name.Contains("SFX"))
+        //    {
+        //        if (PlayerPrefs.HasKey("sfx"))
+        //        {
+        //            LoadVolume(i, "sfx");
+        //        }
+        //        else
+        //        {
+        //            SetAudioSlider(i);
+        //        }
+        //    }
+        //}
+    }
+
+    /// <summary>
+    /// Loads the saved audio settings for the slider
+    /// </summary>
+    /// <param name="slider"></param>
+    /// <param name="s"></param>
+    private void LoadVolume(Slider slider, string s)
+    {
+        float originalValue = slider.value;
+        slider.value = PlayerPrefs.GetFloat(s);
+
+        if (slider.value <= 0)
+        {
+            slider.value = originalValue;
+        }
+       mixer.SetFloat(s, Mathf.Log10(slider.value) * 20);
     }
     public void SelectFirstButton() {
         StartCoroutine(DelayByFrame(resumeButton.gameObject));
