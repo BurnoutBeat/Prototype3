@@ -162,6 +162,13 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnLook(InputAction.CallbackContext context)
     {
+        if (context.control.device is Gamepad) {
+            usingControler = true;
+        }
+        if (context.control.device is Mouse)
+        {
+            usingControler = false;
+        }
         lookDelta = context.ReadValue<Vector2>();
         if (!usingControler) {
             RotatePlayer(lookDelta);
