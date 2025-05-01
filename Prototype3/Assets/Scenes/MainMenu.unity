@@ -3748,7 +3748,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2092189547}
         m_TargetAssemblyTypeName: PauseMenuBehavior, Assembly-CSharp
-        m_MethodName: LoadPlayScene
+        m_MethodName: LoadFreePlayScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7988,8 +7988,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenuScene: MainMenu
   playScene: FinalLevel
+  freePlayScene: TestLevel
   mainMenu: {fileID: 814016484}
   resumeButton: {fileID: 1819974977}
+  extraButton: {fileID: 1102187159}
   howToPlayButton: {fileID: 72232637}
   creditsButton: {fileID: 1410716818}
   settingsButton: {fileID: 1343855698}
