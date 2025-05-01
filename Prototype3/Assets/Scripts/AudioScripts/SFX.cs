@@ -29,7 +29,7 @@ public class SFX
     public AudioMixerGroup mixer;
 
     //A range for how loud the volume can be
-    [Range(0f, 1f)]
+    [Range(0f, 10f)]
     public float maxVolume;
 
     //A range for the pitch of the clip
