@@ -426,4 +426,12 @@ public class PlayerBehavior : MonoBehaviour
         rotationSpeed = PlayerPrefs.GetFloat("sens");
         sensSlider.value = rotationSpeed;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name == "SpiritTree")
+        {
+            SceneManager.LoadScene("WinScene");
+        }
+    }
 }
