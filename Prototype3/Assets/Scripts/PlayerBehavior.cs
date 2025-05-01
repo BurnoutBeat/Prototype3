@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using Unity.VisualScripting;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -57,6 +58,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool canDash = true;
     private float verticalRotation = 0f;
     private float chargeStrength;
+    bool leftGround, moving;
 
     private void Awake()
     {
@@ -68,6 +70,8 @@ public class PlayerBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerAbilities = GetComponent<PlayerAbilities>();
         LoadSensitivity();
+        leftGround = false;
+        moving = false;
     }
     private void FixedUpdate()
     {
@@ -83,6 +87,16 @@ public class PlayerBehavior : MonoBehaviour
             StartCrouch();
         } else {
             EndCrouch();
+        }
+
+        if(grounded() && leftGround)
+        {
+            leftGround = false;
+            SoundManager.Instance.PlaySFX("Land");
+        }
+        else if(!grounded())
+        {
+            leftGround = true;
         }
     }
     private bool ShouldCrouch() {
@@ -150,9 +164,21 @@ public class PlayerBehavior : MonoBehaviour
     {
         print("moved");
         moveInput = context.ReadValue<Vector2>();
+        if(!moving && grounded())
+        {
+            moving = true;
+            SoundManager.Instance.PlaySFX("Walk");
+        }
+        else if(!grounded())
+        {
+            moving = false;
+            SoundManager.Instance.StopSFX("Walk");
+        }
     }
     private void OnMoveCanceled(InputAction.CallbackContext context)
     {
+        SoundManager.Instance.StopSFX("Walk");
+        moving = false;
         moveInput = Vector2.zero;
         if (!crouching)
         {
@@ -184,14 +210,17 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (grounded())
-        {
-            print(chargeStrength);
-            rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
-        }
-        if (crouching && CanUncrouch())
-        {
-            StandUp();
+        if (!pauseMenu.activeSelf) {
+            if (grounded())
+            {
+                print(chargeStrength);
+                rb.AddForce(Vector3.up * (jumpForce + (maxCrouchJumpPower * chargeStrength)), ForceMode.Impulse);
+                SoundManager.Instance.PlaySFX("Jump");
+            }
+            if (crouching && CanUncrouch())
+            {
+                StandUp();
+            }
         }
     }
     private void CrouchPerformed(InputAction.CallbackContext context)
@@ -243,13 +272,16 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if(canDash)
-        {
-            playerAbilities.Dash();
-            dashIcon.SetActive(false);
-            noDashIcon.SetActive(true);
-            canDash = false;
-            StartCoroutine(DashCooldown());
+        if (!pauseMenu.activeSelf) {
+            if (canDash)
+            {
+                playerAbilities.Dash();
+                dashIcon.SetActive(false);
+                noDashIcon.SetActive(true);
+                canDash = false;
+                StartCoroutine(DashCooldown());
+                SoundManager.Instance.PlaySFX("Dash");
+            }
         }
     }
     private bool CanUncrouch()
