@@ -11,11 +11,13 @@ public class PauseMenuBehavior : MonoBehaviour
 {
     public string mainMenuScene = "MainMenu";
     public string playScene = "FinalLevel";
+    public string freePlayScene = "TestLevel";
     [Space(5)]
     [Header("MAIN_MENU")]
     public GameObject mainMenu;
     [Space(2)]
     public GameObject resumeButton;
+    public GameObject extraButton;
     public GameObject howToPlayButton;
     public GameObject creditsButton;
     public GameObject settingsButton;
@@ -63,6 +65,10 @@ public class PauseMenuBehavior : MonoBehaviour
             SelectFirstButton();
         }
         
+    }
+    public void LoadFreePlayScene()
+    {
+        SceneManager.LoadScene(freePlayScene);
     }
     public void LoadPlayScene() {
         SceneManager.LoadScene(playScene);
