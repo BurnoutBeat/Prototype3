@@ -4,16 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEditor;
 
 public class PauseMenuBehavior : MonoBehaviour
 {
     public string mainMenuScene = "MainMenu";
+    public string playScene = "FinalLevel";
     [Space(5)]
     [Header("MAIN_MENU")]
     public GameObject mainMenu;
     [Space(2)]
     public GameObject resumeButton;
     public GameObject howToPlayButton;
+    public GameObject creditsButton;
     public GameObject settingsButton;
     public GameObject returnToMenuButton;
 
@@ -31,19 +34,32 @@ public class PauseMenuBehavior : MonoBehaviour
     public Slider sensitivitySlider;
     public Button settingsBack;
 
+    [Header("CREDITS")]
+    public GameObject creditsMenu;
+    [Space(2)]
+    public Button creditsBack;
+
     public void EscapePressed()
     {
-        if (gameObject.activeSelf && mainMenu.activeSelf) {
-            Resume();
+        if (SceneManager.GetActiveScene().name != "MainMenu") {
+            if (gameObject.activeSelf && mainMenu.activeSelf)
+            {
+                Resume();
+            }
         }
-        if (settingsMenu.activeSelf || howToPlayMenu.activeSelf)
+        
+        if (!mainMenu.activeSelf)
         {
             settingsMenu.SetActive(false);
             howToPlayMenu.SetActive(false);
+            if (creditsMenu) { creditsMenu.SetActive(false); }
             mainMenu.SetActive(true);
             SelectFirstButton();
         }
         
+    }
+    public void LoadPlayScene() {
+        SceneManager.LoadScene(playScene);
     }
     public void Resume()
     {
@@ -65,7 +81,6 @@ public class PauseMenuBehavior : MonoBehaviour
     }
     public void ReturnToMenu()
     {
-        print("called");
         SceneManager.LoadScene(mainMenuScene);
     }
     public void UpdateSensitivity()
@@ -80,5 +95,15 @@ public class PauseMenuBehavior : MonoBehaviour
         yield return null;
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(objectToSelect);
+    }
+    public void Credits()
+    {
+        creditsMenu.SetActive(true);
+        mainMenu.SetActive(false);
+        StartCoroutine(DelayByFrame(creditsBack.gameObject));
+    }
+    public void QuitGmae()
+    {
+        Application.Quit();
     }
 }   

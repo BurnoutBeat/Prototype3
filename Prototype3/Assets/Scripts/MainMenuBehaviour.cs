@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class MainMenuBehaviour : MonoBehaviour
     private Button firstSelectedButton;
     public static MainMenuBehaviour Instance;
     public static float sensitivity;
+    public Button startButton;
 
     /// <summary>
     /// Ensures there is only one instance
@@ -36,7 +38,17 @@ public class MainMenuBehaviour : MonoBehaviour
 
         LoadSensitivity();
     }
-
+    private void Start()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(startButton.gameObject);
+    }
+    
+    private IEnumerator DelayByFrame(GameObject objectToSelect)
+    {
+        yield return null;
+        
+    }
     /// <summary>
     /// Sets the sensitivity of the player
     /// </summary>
@@ -74,14 +86,6 @@ public class MainMenuBehaviour : MonoBehaviour
     /// </summary>
     public void QuitGame()
     {
-        //Quits out of the editor instead
-        if (EditorApplication.isPlaying)
-        {
-            EditorApplication.isPlaying = false;
-        }
-        else
-        {
-            Application.Quit();
-        }
+
     }
 }
