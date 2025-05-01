@@ -15,7 +15,7 @@ public class MainMenuBehaviour : MonoBehaviour
 {
     [SerializeField] private string sceneName;
     [SerializeField] private Slider sensSlider;
-
+    private Button firstSelectedButton;
     public static MainMenuBehaviour Instance;
     public static float sensitivity;
 
