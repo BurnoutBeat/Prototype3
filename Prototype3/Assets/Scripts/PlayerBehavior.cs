@@ -76,6 +76,7 @@ public class PlayerBehavior : MonoBehaviour
         UpdateJumpChargeSlider();
         if (usingControler)
         {
+            LoadSensitivity();
             RotatePlayer(lookDelta);
         }
         ApplyGravity();
@@ -168,9 +169,14 @@ public class PlayerBehavior : MonoBehaviour
         {
             usingControler = false;
         }
-        lookDelta = context.ReadValue<Vector2>();
-        if (!usingControler) {
+        if (!usingControler)
+        {
+            lookDelta = context.ReadValue<Vector2>();
+            LoadSensitivity();
             RotatePlayer(lookDelta);
+        }
+        else {
+            lookDelta = context.ReadValue<Vector2>() * 15f;
         }
     }
     private void LookStopped(InputAction.CallbackContext context)

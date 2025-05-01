@@ -68,6 +68,10 @@ public class PauseMenuBehavior : MonoBehaviour
         print("called");
         SceneManager.LoadScene(mainMenuScene);
     }
+    public void UpdateSensitivity()
+    {
+        PlayerPrefs.SetFloat("sens", sensitivitySlider.value);
+    }
     public void SelectFirstButton() {
         StartCoroutine(DelayByFrame(resumeButton.gameObject));
     }

@@ -7789,7 +7789,7 @@ MonoBehaviour:
     type: 3}
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_DeselectOnBackgroundClick: 1
+  m_DeselectOnBackgroundClick: 0
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
 --- !u!1001 &1010711926
@@ -14145,6 +14145,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4378255942053274271, guid: 0c601d847a7e20c45900f13f095be3d7,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5151763008653543690, guid: 0c601d847a7e20c45900f13f095be3d7, type: 3}
@@ -14534,6 +14539,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2067100742}
     m_Modifications:
+    - target: {fileID: 223537913530240807, guid: 3644bb0767f23224ab6b75135e6bebc7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 888443806239746142, guid: 3644bb0767f23224ab6b75135e6bebc7,
         type: 3}
       propertyPath: m_Pivot.x
@@ -14634,10 +14644,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6231271234594513205, guid: 3644bb0767f23224ab6b75135e6bebc7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8659826674933989478, guid: 3644bb0767f23224ab6b75135e6bebc7,
         type: 3}
       propertyPath: m_Name
       value: PauseMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 8659826674933989478, guid: 3644bb0767f23224ab6b75135e6bebc7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8764276722181175012, guid: 3644bb0767f23224ab6b75135e6bebc7,
+        type: 3}
+      propertyPath: m_Value
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8764276722181175012, guid: 3644bb0767f23224ab6b75135e6bebc7,
+        type: 3}
+      propertyPath: m_MaxValue
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8764276722181175012, guid: 3644bb0767f23224ab6b75135e6bebc7,
+        type: 3}
+      propertyPath: m_MinValue
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
