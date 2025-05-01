@@ -25930,17 +25930,17 @@ PrefabInstance:
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -23.687504
+      value: -41.8
       objectReference: {fileID: 0}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.62
+      value: 89.5
       objectReference: {fileID: 0}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 33.548004
+      value: 898.1
       objectReference: {fileID: 0}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
@@ -33624,6 +33624,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: WinScene
+--- !u!65 &1774689238
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774689235}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.1751544, y: 22.692236, z: 2.3485427}
+  m_Center: {x: -0.11140251, y: 10.846113, z: -0.07308523}
 --- !u!1001 &1779933881
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40714,6 +40735,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1774689237}
+    - targetCorrespondingSourceObject: {fileID: 578812476389668935, guid: a2ea68e353b6a05418552eec289b328c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1774689238}
   m_SourcePrefab: {fileID: 100100000, guid: a2ea68e353b6a05418552eec289b328c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
