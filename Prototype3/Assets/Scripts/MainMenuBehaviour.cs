@@ -26,6 +26,7 @@ public class MainMenuBehaviour : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        print("awake");
         //Makes sure there is one singleton instance
         if (Instance != null && Instance != this)
         {
