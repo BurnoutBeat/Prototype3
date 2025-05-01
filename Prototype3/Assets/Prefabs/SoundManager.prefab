@@ -44,4 +44,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf050e84aa461dc4fad014a25efe3219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClips: []
+  audioClips:
+  - audioName: Dash
+    clips:
+    - {fileID: 8300000, guid: 26fb448ceb99c904ab35756d9ba75c12, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: 5902632444716894904, guid: ea988012648d171429f899534e82f885, type: 2}
+    maxVolume: 10
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: Jump
+    clips:
+    - {fileID: 8300000, guid: 7af1546d8b67ecc45a5baa11ced0d9f3, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: 5902632444716894904, guid: ea988012648d171429f899534e82f885, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: Land
+    clips:
+    - {fileID: 8300000, guid: c99fbd39b1084b14396c43ac35dbe933, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: 5902632444716894904, guid: ea988012648d171429f899534e82f885, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: Walk
+    clips:
+    - {fileID: 8300000, guid: b6be21901a6b7d04bb332e1c06aed829, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: 5902632444716894904, guid: ea988012648d171429f899534e82f885, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 1
+    source: {fileID: 0}
