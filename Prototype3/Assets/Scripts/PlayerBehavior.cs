@@ -1,7 +1,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,6 +10,7 @@ using System;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    public bool usingControler = false;
     [Header("LOOKING")]
     public GameObject eyes; //camera
     public Slider jumpChargeMeter;
@@ -73,6 +73,11 @@ public class PlayerBehavior : MonoBehaviour
     {
         MovePlayer();
         UpdateJumpChargeSlider();
+        if (usingControler)
+        {
+            LoadSensitivity();
+            RotatePlayer(lookDelta);
+        }
         ApplyGravity();
         if (ShouldCrouch()) {
             StartCrouch();
@@ -117,7 +122,6 @@ public class PlayerBehavior : MonoBehaviour
             rb.AddForce(gravity, ForceMode.Acceleration);
         }
     }
-
     private void UpdateJumpChargeSlider()
     {
         if (crouching)
@@ -157,8 +161,26 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnLook(InputAction.CallbackContext context)
     {
-        lookDelta = context.ReadValue<Vector2>();
-        RotatePlayer(lookDelta);
+        if (context.control.device is Gamepad) {
+            usingControler = true;
+        }
+        if (context.control.device is Mouse)
+        {
+            usingControler = false;
+        }
+        if (!usingControler)
+        {
+            lookDelta = context.ReadValue<Vector2>();
+            LoadSensitivity();
+            RotatePlayer(lookDelta);
+        }
+        else {
+            lookDelta = context.ReadValue<Vector2>() * 15f;
+        }
+    }
+    private void LookStopped(InputAction.CallbackContext context)
+    {
+        lookDelta = Vector2.zero;
     }
     private void OnJump(InputAction.CallbackContext context)
     {
@@ -322,6 +344,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
+        inputActions.PlayerActions.Look.canceled += LookStopped;
         inputActions.PlayerActions.Dash.performed += OnDash;
         inputActions.PlayerActions.Pause.started += Pause_started;
     }
@@ -334,6 +357,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
         inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
+        inputActions.PlayerActions.Look.canceled -= LookStopped;
         inputActions.PlayerActions.Dash.performed -= OnDash;
         inputActions.PlayerActions.Pause.started -= Pause_started;
     }
@@ -352,41 +376,19 @@ public class PlayerBehavior : MonoBehaviour
     /// <param name="obj"></param>
     private void Pause_started(InputAction.CallbackContext obj)
     {
+        Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0;
-        pauseMenu.SetActive(true);
+        if (pauseMenu.activeSelf)
+        {
+            pauseMenu.GetComponent<PauseMenuBehavior>().EscapePressed();
+        }
+        else {
+            pauseMenu.SetActive(true);
+            pauseMenu.GetComponent<PauseMenuBehavior>().SelectFirstButton();
+        }
     }
 
-    /// <summary>
-    /// Resumes the game
-    /// </summary>
-    public void ResumeButton()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1;
-    }
-
-    /// <summary>
-    /// Returns to the main menu screen
-    /// </summary>
-    public void ReturnToMenuButton()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-
-    /// <summary>
-    /// Sets the sensitivity of the player
-    /// </summary>
-    /// <param name="slider"></param>
-    public void SetSensitivity()
-    {
-        rotationSpeed = sensSlider.value;
-        PlayerPrefs.SetFloat("sens", rotationSpeed);
-    }
-
-    /// <summary>
-    /// Loads the playerPref of the sensitivity
-    /// </summary>
     private void LoadSensitivity()
     {
         rotationSpeed = PlayerPrefs.GetFloat("sens");
