@@ -10683,7 +10683,7 @@ PrefabInstance:
         type: 3}
       propertyPath: clips.Array.data[0].animation
       value: 
-      objectReference: {fileID: 7400000, guid: 7d060c12e3008dc409e14279c79247df, type: 2}
+      objectReference: {fileID: 7400000, guid: a92937e35c14d41428ec881b4b85a72a, type: 2}
     - target: {fileID: 3627468200653823418, guid: 7bcab9d3ab1e4e141853062290037a2a,
         type: 3}
       propertyPath: clips.Array.data[0].animationName
