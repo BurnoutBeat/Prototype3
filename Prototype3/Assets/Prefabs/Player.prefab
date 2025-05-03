@@ -291,10 +291,10 @@ MonoBehaviour:
   eyes: {fileID: 884284286164930379}
   jumpChargeMeter: {fileID: 0}
   maxLookAngle: 80
-  rotationSpeed: 50
+  rotationSpeed: 5
   moveSpeed: 20
   airMoveSpeed: 15
-  jumpForce: 5
+  jumpForce: 8
   fallingGravity: 2
   timeBeforeIdle: 10
   crouchChargeTime: 2
