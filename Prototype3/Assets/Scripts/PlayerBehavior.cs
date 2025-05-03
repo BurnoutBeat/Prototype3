@@ -1,13 +1,8 @@
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System;
-using Unity.VisualScripting;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -24,6 +19,7 @@ public class PlayerBehavior : MonoBehaviour
     public float airMoveSpeed = 2.5f;
     public float jumpForce = 10f;
     public float fallingGravity = 2f;
+    [SerializeField] float timeBeforeIdle = 10f;
 
     [Space(10)]
     [Header("CROUCHING")]
@@ -32,9 +28,11 @@ public class PlayerBehavior : MonoBehaviour
     public float maxCrouchJumpPower = 10f;
     public bool infiniteSlide = true;
     public bool boostedCharge = false;
+    [SerializeField] Animator m_Animator;
+
 
     [Space(10)]
-    [Header("Dashing")]
+    [Header("DASHING")]
     [SerializeField] GameObject dashIcon;
     [SerializeField] GameObject noDashIcon;
     public float dashCooldown = 1f;
@@ -59,6 +57,7 @@ public class PlayerBehavior : MonoBehaviour
     private float verticalRotation = 0f;
     private float chargeStrength;
     bool leftGround, moving;
+    private float idleTime;
 
     private void Awake()
     {
@@ -77,15 +76,19 @@ public class PlayerBehavior : MonoBehaviour
     {
         MovePlayer();
         UpdateJumpChargeSlider();
+        UpdateSlideAnimation();
         if (usingControler)
         {
             LoadSensitivity();
             RotatePlayer(lookDelta);
         }
         ApplyGravity();
-        if (ShouldCrouch()) {
+        if (ShouldCrouch()) 
+        {
             StartCrouch();
-        } else {
+        } 
+        else 
+        {
             EndCrouch();
         }
 
@@ -97,6 +100,11 @@ public class PlayerBehavior : MonoBehaviour
         else if(!grounded())
         {
             leftGround = true;
+        }
+
+        if(!crouching)
+        {
+            CheckIdleTime();
         }
     }
     private bool ShouldCrouch() {
@@ -117,6 +125,7 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y -= 0.5f;
         eyes.transform.position = newPos;
+        idleTime = 0;
     }
     private void EndCrouch()
     {
@@ -245,7 +254,7 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
 
-    private void CrouchCancled(InputAction.CallbackContext context)
+    private void CrouchCanceled(InputAction.CallbackContext context)
     {
         capsLockHeld = false;
         if (crouching && CanUncrouch())
@@ -374,7 +383,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Move.canceled += OnMoveCanceled;
         inputActions.PlayerActions.Jump.performed += OnJump;
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
-        inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
+        inputActions.PlayerActions.Crouch.canceled += CrouchCanceled;
         inputActions.PlayerActions.Look.performed += OnLook;
         inputActions.PlayerActions.Look.canceled += LookStopped;
         inputActions.PlayerActions.Dash.performed += OnDash;
@@ -387,7 +396,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Jump.performed -= OnJump;
         inputActions.PlayerActions.Move.canceled -= OnMoveCanceled;
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
-        inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
+        inputActions.PlayerActions.Crouch.canceled -= CrouchCanceled;
         inputActions.PlayerActions.Look.performed -= OnLook;
         inputActions.PlayerActions.Look.canceled -= LookStopped;
         inputActions.PlayerActions.Dash.performed -= OnDash;
@@ -425,5 +434,54 @@ public class PlayerBehavior : MonoBehaviour
     {
         rotationSpeed = PlayerPrefs.GetFloat("sens");
         sensSlider.value = rotationSpeed;
+    }
+
+    private void UpdateSlideAnimation()
+    {
+        int stage = 0;
+
+        if(jumpChargeMeter.value == 0)
+        {
+            stage = 0;
+        }
+        else if (jumpChargeMeter.value > 0 && jumpChargeMeter.value < 20)
+        {
+            stage = 1;
+        }
+        else if (jumpChargeMeter.value >= 20 && jumpChargeMeter.value < 40)
+        {
+            stage = 2;
+        }
+        else if (jumpChargeMeter.value >= 40 && jumpChargeMeter.value < 60)
+        {
+            stage = 3;
+        }
+        else if (jumpChargeMeter.value >= 60 && jumpChargeMeter.value < 80)
+        {
+            stage = 4;
+        }
+        else if (jumpChargeMeter.value >= 80 && jumpChargeMeter.value <= 100)
+        {
+            stage = 5;
+        }
+        m_Animator.SetInteger("slideStage", stage);
+    }
+
+    private void CheckIdleTime()
+    {
+        if(rb.velocity.magnitude < 0.1f)
+        {
+            idleTime += Time.deltaTime;
+        }
+        else
+        {
+            idleTime = 0;
+        }
+
+        if(idleTime >= timeBeforeIdle)
+        {
+            m_Animator.SetTrigger("idle");
+            idleTime = 0;
+        }
     }
 }

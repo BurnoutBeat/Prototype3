@@ -4,8 +4,6 @@
  * Creation Date: 4/21/2025
  * Brief: Contains values for an animated object
  * ***************************************************************************/
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
