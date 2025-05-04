@@ -35,7 +35,6 @@ public class AudioSettings : MonoBehaviour
     public void LoadSettings()
     {
         Slider[] sliders = FindObjectsOfType<Slider>();
-        Debug.Log(sliders.Length);
 
         foreach (Slider i in sliders)
         {

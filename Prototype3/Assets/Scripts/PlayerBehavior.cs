@@ -176,7 +176,6 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
-        print("moved");
         moveInput = context.ReadValue<Vector2>();
         if (!moving && grounded())
         {
