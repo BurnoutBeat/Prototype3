@@ -7,6 +7,7 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] float dashDistance = 10f;
     [SerializeField] float dashSpeed = 50f;
     private PlayerBehavior playerBehavior;
+    [SerializeField] Animator m_Animator;
 
     private void Start()
     {
@@ -16,6 +17,8 @@ public class PlayerAbilities : MonoBehaviour
     public void Dash()
     {
         StartCoroutine(DashRoutine());
+        m_Animator.SetTrigger("dash");
+        StartCoroutine(StopDashAnimation());
     }
 
     private IEnumerator DashRoutine()
@@ -50,5 +53,11 @@ public class PlayerAbilities : MonoBehaviour
 
             yield return null;
         }*/
+    }
+
+    private IEnumerator StopDashAnimation()
+    {
+        yield return new WaitForSeconds(playerBehavior.crouchChargeTime);
+        m_Animator.ResetTrigger("dash");
     }
 }

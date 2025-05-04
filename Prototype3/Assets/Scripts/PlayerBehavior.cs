@@ -1,13 +1,10 @@
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
-using Unity.VisualScripting;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -24,6 +21,7 @@ public class PlayerBehavior : MonoBehaviour
     public float airMoveSpeed = 2.5f;
     public float jumpForce = 10f;
     public float fallingGravity = 2f;
+    [SerializeField] float timeBeforeIdle = 10f;
 
     [Space(10)]
     [Header("CROUCHING")]
@@ -32,9 +30,10 @@ public class PlayerBehavior : MonoBehaviour
     public float maxCrouchJumpPower = 10f;
     public bool infiniteSlide = true;
     public bool boostedCharge = false;
+    [SerializeField] Animator m_Animator;
 
     [Space(10)]
-    [Header("Dashing")]
+    [Header("DASHING")]
     [SerializeField] GameObject dashIcon;
     [SerializeField] GameObject noDashIcon;
     public float dashCooldown = 1f;
@@ -59,6 +58,7 @@ public class PlayerBehavior : MonoBehaviour
     private float verticalRotation = 0f;
     private float chargeStrength;
     bool leftGround, moving;
+    private float idleTime;
 
     private void Awake()
     {
@@ -77,29 +77,39 @@ public class PlayerBehavior : MonoBehaviour
     {
         MovePlayer();
         UpdateJumpChargeSlider();
+        UpdateSlideAnimation();
         if (usingControler)
         {
             LoadSensitivity();
             RotatePlayer(lookDelta);
         }
         ApplyGravity();
-        if (ShouldCrouch()) {
+        if (ShouldCrouch())
+        {
             StartCrouch();
-        } else {
+        }
+        else
+        {
             EndCrouch();
         }
 
-        if(grounded() && leftGround)
+        if (grounded() && leftGround)
         {
             leftGround = false;
             SoundManager.Instance.PlaySFX("Land");
         }
-        else if(!grounded())
+        else if (!grounded())
         {
             leftGround = true;
         }
+
+        if(!crouching)
+        {
+            CheckIdleTime();
+        }
     }
-    private bool ShouldCrouch() {
+    private bool ShouldCrouch()
+    {
         if (grounded() && capsLockHeld)
         {
             lastVelocity = rb.velocity;
@@ -117,6 +127,7 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y -= 0.5f;
         eyes.transform.position = newPos;
+        idleTime = 0;
     }
     private void EndCrouch()
     {
@@ -124,14 +135,16 @@ public class PlayerBehavior : MonoBehaviour
         {
             crouching = false;
             StandUp();
-        } else if (rb.velocity.magnitude < 0.2f)
+        }
+        else if (rb.velocity.magnitude < 0.2f)
         {
             crouchingMovment = true;
         }
     }
     private void ApplyGravity()
     {
-        if (rb.velocity.y <= 0) {
+        if (rb.velocity.y <= 0)
+        {
             Vector3 gravity = Physics.gravity * fallingGravity;
             rb.AddForce(gravity, ForceMode.Acceleration);
         }
@@ -144,13 +157,14 @@ public class PlayerBehavior : MonoBehaviour
             if (chargeStrength > 1)
             {
                 chargeStrength = 1;
-            } else if (chargeStrength > 1 && boostedCharge)
+            }
+            else if (chargeStrength > 1 && boostedCharge)
             {
                 chargeStrength = 1.5f;
             }
             jumpChargeMeter.value = chargeStrength * 100;
         }
-        else 
+        else
         {
             chargeStrength -= uncrouchChargeTime * Time.deltaTime;
             if (chargeStrength < 0)
@@ -164,12 +178,12 @@ public class PlayerBehavior : MonoBehaviour
     {
         print("moved");
         moveInput = context.ReadValue<Vector2>();
-        if(!moving && grounded())
+        if (!moving && grounded())
         {
             moving = true;
             SoundManager.Instance.PlaySFX("Walk");
         }
-        else if(!grounded())
+        else if (!grounded())
         {
             moving = false;
             SoundManager.Instance.StopSFX("Walk");
@@ -187,7 +201,8 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnLook(InputAction.CallbackContext context)
     {
-        if (context.control.device is Gamepad) {
+        if (context.control.device is Gamepad)
+        {
             usingControler = true;
         }
         if (context.control.device is Mouse)
@@ -200,7 +215,8 @@ public class PlayerBehavior : MonoBehaviour
             LoadSensitivity();
             RotatePlayer(lookDelta);
         }
-        else {
+        else
+        {
             lookDelta = context.ReadValue<Vector2>() * 15f;
         }
     }
@@ -210,7 +226,8 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (!pauseMenu.activeSelf) {
+        if (!pauseMenu.activeSelf)
+        {
             if (grounded())
             {
                 print(chargeStrength);
@@ -239,7 +256,7 @@ public class PlayerBehavior : MonoBehaviour
             crouching = true;
 
         }
-        else if(!grounded())
+        else if (!grounded())
         {
 
         }
@@ -272,7 +289,8 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if (!pauseMenu.activeSelf) {
+        if (!pauseMenu.activeSelf)
+        {
             if (canDash)
             {
                 playerAbilities.Dash();
@@ -415,7 +433,8 @@ public class PlayerBehavior : MonoBehaviour
         {
             pauseMenu.GetComponent<PauseMenuBehavior>().EscapePressed();
         }
-        else {
+        else
+        {
             pauseMenu.SetActive(true);
             pauseMenu.GetComponent<PauseMenuBehavior>().SelectFirstButton();
         }
@@ -432,6 +451,65 @@ public class PlayerBehavior : MonoBehaviour
         if (other.gameObject.name == "SpiritTree")
         {
             SceneManager.LoadScene("WinScene");
+        }
+    }
+
+    private void UpdateSlideAnimation()
+    {
+        int stage = 0;
+
+        if (jumpChargeMeter.value == 0)
+        {
+            stage = 0;
+        }
+        else if (jumpChargeMeter.value > 0 && jumpChargeMeter.value < 20)
+        {
+            stage = 1;
+        }
+        else if (jumpChargeMeter.value >= 20 && jumpChargeMeter.value < 40)
+        {
+            stage = 2;
+        }
+        else if (jumpChargeMeter.value >= 40 && jumpChargeMeter.value < 60)
+        {
+            stage = 3;
+        }
+        else if (jumpChargeMeter.value >= 60 && jumpChargeMeter.value < 80)
+        {
+            stage = 4;
+        }
+        else if (jumpChargeMeter.value >= 80 && jumpChargeMeter.value <= 100)
+        {
+            stage = 5;
+        }
+        m_Animator.SetInteger("slideStage", stage);
+    }
+
+    private void CheckIdleTime()
+    {
+        if (rb.velocity.magnitude < 0.1f)
+        {
+            idleTime += Time.deltaTime;
+        }
+        else
+        {
+            idleTime = 0;
+        }
+
+        if (idleTime >= timeBeforeIdle)
+        {
+            int randNum = UnityEngine.Random.Range(1, 3);
+            Debug.Log("The random number is:" + randNum);
+            if (randNum == 1)
+            {
+                m_Animator.SetTrigger("idle1");
+            }
+            else if (randNum == 2)
+            {
+                m_Animator.SetTrigger("idle2");
+            }
+
+            idleTime = 0;
         }
     }
 }
