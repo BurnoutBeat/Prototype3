@@ -480,7 +480,17 @@ public class PlayerBehavior : MonoBehaviour
 
         if(idleTime >= timeBeforeIdle)
         {
-            m_Animator.SetTrigger("idle");
+            int randNum = Random.Range(1, 3);
+            Debug.Log("The random number is:" + randNum);
+            if(randNum == 1)
+            {
+                m_Animator.SetTrigger("idle1");
+            }
+            else if(randNum == 2)
+            {
+                m_Animator.SetTrigger("idle2");
+            }
+            
             idleTime = 0;
         }
     }
