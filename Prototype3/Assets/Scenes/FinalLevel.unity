@@ -25927,6 +25927,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: m_Animator
+      value: 
+      objectReference: {fileID: 1461982348}
     - target: {fileID: 3952313234379131269, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -25987,6 +25992,11 @@ PrefabInstance:
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 2067100744}
+    - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: m_Animator
+      value: 
+      objectReference: {fileID: 1461982348}
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: noDashIcon
@@ -27343,6 +27353,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2753005022768248747, guid: 784c94e232eeac344afed7c414b3a438,
     type: 3}
   m_PrefabInstance: {fileID: 1460362794}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1461982348 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2475810278948960163, guid: 0c601d847a7e20c45900f13f095be3d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2067100741}
   m_PrefabAsset: {fileID: 0}
 --- !u!43 &1486347800
 Mesh:
