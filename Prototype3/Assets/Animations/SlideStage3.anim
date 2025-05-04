@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dash
+  m_Name: SlideStage3
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,9 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: a32846283d40f42409e6b0283f029855, type: 3}
-    - time: 0.083333336
-      value: {fileID: 21300000, guid: be9f0836f98728e4f8431f058b543295, type: 3}
-    - time: 0.16666667
-      value: {fileID: 21300000, guid: 52f9aa9a8bce0214688a7b7bcb9d8545, type: 3}
-    - time: 0.25
-      value: {fileID: 21300000, guid: 52f9aa9a8bce0214688a7b7bcb9d8545, type: 3}
+      value: {fileID: 21300000, guid: 5b7e16ad5e452a34db485d9b4e8cbe1b, type: 3}
+    - time: 0.4
+      value: {fileID: 21300000, guid: 0a19fc7f4df0edc4da88a56fc9d21f50, type: 3}
     attribute: m_Sprite
     path: 
     classID: 114
@@ -50,16 +46,14 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: a32846283d40f42409e6b0283f029855, type: 3}
-    - {fileID: 21300000, guid: be9f0836f98728e4f8431f058b543295, type: 3}
-    - {fileID: 21300000, guid: 52f9aa9a8bce0214688a7b7bcb9d8545, type: 3}
-    - {fileID: 21300000, guid: 52f9aa9a8bce0214688a7b7bcb9d8545, type: 3}
+    - {fileID: 21300000, guid: 5b7e16ad5e452a34db485d9b4e8cbe1b, type: 3}
+    - {fileID: 21300000, guid: 0a19fc7f4df0edc4da88a56fc9d21f50, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.26666668
+    m_StopTime: 0.4166667
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
