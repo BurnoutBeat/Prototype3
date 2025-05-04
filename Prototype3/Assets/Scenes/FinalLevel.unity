@@ -8411,6 +8411,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
         type: 3}
+      propertyPath: m_Animator
+      value: 
+      objectReference: {fileID: 2067100743}
+    - target: {fileID: 1879785131524336585, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
       propertyPath: dashDistance
       value: 100
       objectReference: {fileID: 0}
@@ -8479,6 +8484,11 @@ PrefabInstance:
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 1835475552}
+    - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
+        type: 3}
+      propertyPath: m_Animator
+      value: 
+      objectReference: {fileID: 2067100743}
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: noDashIcon
@@ -14279,6 +14289,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_Mode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9197443555073725772, guid: 0c601d847a7e20c45900f13f095be3d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5151763008653543690, guid: 0c601d847a7e20c45900f13f095be3d7, type: 3}
@@ -14292,6 +14307,12 @@ PrefabInstance:
 --- !u!224 &2067100742 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3995623247028406875, guid: 0c601d847a7e20c45900f13f095be3d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2067100741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2067100743 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4765101889996156677, guid: 0c601d847a7e20c45900f13f095be3d7,
     type: 3}
   m_PrefabInstance: {fileID: 2067100741}
   m_PrefabAsset: {fileID: 0}
