@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 public class PlayerCollisionDetection : MonoBehaviour
 {
     public string sceneToLoad = "WinScene";
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.name == "Player") { 
+        if (other.gameObject.name == "Player")
+        {
             SceneManager.LoadScene(sceneToLoad);
         }
     }

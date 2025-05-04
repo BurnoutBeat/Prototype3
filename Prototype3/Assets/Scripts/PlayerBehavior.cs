@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -29,7 +31,6 @@ public class PlayerBehavior : MonoBehaviour
     public bool infiniteSlide = true;
     public bool boostedCharge = false;
     [SerializeField] Animator m_Animator;
-
 
     [Space(10)]
     [Header("DASHING")]
@@ -83,21 +84,21 @@ public class PlayerBehavior : MonoBehaviour
             RotatePlayer(lookDelta);
         }
         ApplyGravity();
-        if (ShouldCrouch()) 
+        if (ShouldCrouch())
         {
             StartCrouch();
-        } 
-        else 
+        }
+        else
         {
             EndCrouch();
         }
 
-        if(grounded() && leftGround)
+        if (grounded() && leftGround)
         {
             leftGround = false;
             SoundManager.Instance.PlaySFX("Land");
         }
-        else if(!grounded())
+        else if (!grounded())
         {
             leftGround = true;
         }
@@ -107,7 +108,8 @@ public class PlayerBehavior : MonoBehaviour
             CheckIdleTime();
         }
     }
-    private bool ShouldCrouch() {
+    private bool ShouldCrouch()
+    {
         if (grounded() && capsLockHeld)
         {
             lastVelocity = rb.velocity;
@@ -133,14 +135,16 @@ public class PlayerBehavior : MonoBehaviour
         {
             crouching = false;
             StandUp();
-        } else if (rb.velocity.magnitude < 0.2f)
+        }
+        else if (rb.velocity.magnitude < 0.2f)
         {
             crouchingMovment = true;
         }
     }
     private void ApplyGravity()
     {
-        if (rb.velocity.y <= 0) {
+        if (rb.velocity.y <= 0)
+        {
             Vector3 gravity = Physics.gravity * fallingGravity;
             rb.AddForce(gravity, ForceMode.Acceleration);
         }
@@ -153,13 +157,14 @@ public class PlayerBehavior : MonoBehaviour
             if (chargeStrength > 1)
             {
                 chargeStrength = 1;
-            } else if (chargeStrength > 1 && boostedCharge)
+            }
+            else if (chargeStrength > 1 && boostedCharge)
             {
                 chargeStrength = 1.5f;
             }
             jumpChargeMeter.value = chargeStrength * 100;
         }
-        else 
+        else
         {
             chargeStrength -= uncrouchChargeTime * Time.deltaTime;
             if (chargeStrength < 0)
@@ -172,12 +177,12 @@ public class PlayerBehavior : MonoBehaviour
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-        if(!moving && grounded())
+        if (!moving && grounded())
         {
             moving = true;
             SoundManager.Instance.PlaySFX("Walk");
         }
-        else if(!grounded())
+        else if (!grounded())
         {
             moving = false;
             SoundManager.Instance.StopSFX("Walk");
@@ -195,7 +200,8 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnLook(InputAction.CallbackContext context)
     {
-        if (context.control.device is Gamepad) {
+        if (context.control.device is Gamepad)
+        {
             usingControler = true;
         }
         if (context.control.device is Mouse)
@@ -208,7 +214,8 @@ public class PlayerBehavior : MonoBehaviour
             LoadSensitivity();
             RotatePlayer(lookDelta);
         }
-        else {
+        else
+        {
             lookDelta = context.ReadValue<Vector2>() * 15f;
         }
     }
@@ -218,7 +225,8 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (!pauseMenu.activeSelf) {
+        if (!pauseMenu.activeSelf)
+        {
             if (grounded())
             {
                 print(chargeStrength);
@@ -247,13 +255,13 @@ public class PlayerBehavior : MonoBehaviour
             crouching = true;
 
         }
-        else if(!grounded())
+        else if (!grounded())
         {
 
         }
     }
 
-    private void CrouchCanceled(InputAction.CallbackContext context)
+    private void CrouchCancled(InputAction.CallbackContext context)
     {
         capsLockHeld = false;
         if (crouching && CanUncrouch())
@@ -280,7 +288,8 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void OnDash(InputAction.CallbackContext ctx)
     {
-        if (!pauseMenu.activeSelf) {
+        if (!pauseMenu.activeSelf)
+        {
             if (canDash)
             {
                 playerAbilities.Dash();
@@ -382,7 +391,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Move.canceled += OnMoveCanceled;
         inputActions.PlayerActions.Jump.performed += OnJump;
         inputActions.PlayerActions.Crouch.performed += CrouchPerformed;
-        inputActions.PlayerActions.Crouch.canceled += CrouchCanceled;
+        inputActions.PlayerActions.Crouch.canceled += CrouchCancled;
         inputActions.PlayerActions.Look.performed += OnLook;
         inputActions.PlayerActions.Look.canceled += LookStopped;
         inputActions.PlayerActions.Dash.performed += OnDash;
@@ -395,7 +404,7 @@ public class PlayerBehavior : MonoBehaviour
         inputActions.PlayerActions.Jump.performed -= OnJump;
         inputActions.PlayerActions.Move.canceled -= OnMoveCanceled;
         inputActions.PlayerActions.Crouch.performed -= CrouchPerformed;
-        inputActions.PlayerActions.Crouch.canceled -= CrouchCanceled;
+        inputActions.PlayerActions.Crouch.canceled -= CrouchCancled;
         inputActions.PlayerActions.Look.performed -= OnLook;
         inputActions.PlayerActions.Look.canceled -= LookStopped;
         inputActions.PlayerActions.Dash.performed -= OnDash;
@@ -423,7 +432,8 @@ public class PlayerBehavior : MonoBehaviour
         {
             pauseMenu.GetComponent<PauseMenuBehavior>().EscapePressed();
         }
-        else {
+        else
+        {
             pauseMenu.SetActive(true);
             pauseMenu.GetComponent<PauseMenuBehavior>().SelectFirstButton();
         }
@@ -435,11 +445,19 @@ public class PlayerBehavior : MonoBehaviour
         sensSlider.value = rotationSpeed;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name == "SpiritTree")
+        {
+            SceneManager.LoadScene("WinScene");
+        }
+    }
+
     private void UpdateSlideAnimation()
     {
         int stage = 0;
 
-        if(jumpChargeMeter.value == 0)
+        if (jumpChargeMeter.value == 0)
         {
             stage = 0;
         }
@@ -468,7 +486,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private void CheckIdleTime()
     {
-        if(rb.velocity.magnitude < 0.1f)
+        if (rb.velocity.magnitude < 0.1f)
         {
             idleTime += Time.deltaTime;
         }
@@ -477,19 +495,18 @@ public class PlayerBehavior : MonoBehaviour
             idleTime = 0;
         }
 
-        if(idleTime >= timeBeforeIdle)
+        if (idleTime >= timeBeforeIdle)
         {
-            int randNum = Random.Range(1, 3);
-
-            if(randNum == 1)
+            int randNum = UnityEngine.Random.Range(1, 3);
+            if (randNum == 1)
             {
                 m_Animator.SetTrigger("idle1");
             }
-            else if(randNum == 2)
+            else if (randNum == 2)
             {
                 m_Animator.SetTrigger("idle2");
             }
-            
+
             idleTime = 0;
         }
     }

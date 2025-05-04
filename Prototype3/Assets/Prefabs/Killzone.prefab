@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4672970787691276597}
   - component: {fileID: 218128656727242822}
   - component: {fileID: 471395549379427876}
+  - component: {fileID: 5217136397909546654}
   m_Layer: 0
   m_Name: Killzone
   m_TagString: Untagged
@@ -64,6 +65,18 @@ BoxCollider:
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &471395549379427876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150114380584849739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b07f14e02dc1244bcc1c3f9cea72bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5217136397909546654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
