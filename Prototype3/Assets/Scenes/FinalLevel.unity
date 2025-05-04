@@ -7265,18 +7265,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 392809850}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &398687130 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5112615190331604872, guid: 0c601d847a7e20c45900f13f095be3d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2067100741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &400137385
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26006,7 +25994,7 @@ PrefabInstance:
         type: 3}
       propertyPath: sensSlider
       value: 
-      objectReference: {fileID: 398687130}
+      objectReference: {fileID: 2067100743}
     - target: {fileID: 5227510614620021639, guid: 2926415d8266bb242938733482691a01,
         type: 3}
       propertyPath: jumpChargeMeter
@@ -38798,9 +38786,21 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2067100741}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2067100743 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1360441004399913725, guid: 0c601d847a7e20c45900f13f095be3d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2067100741}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2067100744 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5151763008653543690, guid: 0c601d847a7e20c45900f13f095be3d7,
+  m_CorrespondingSourceObject: {fileID: 1399586658026790015, guid: 0c601d847a7e20c45900f13f095be3d7,
     type: 3}
   m_PrefabInstance: {fileID: 2067100741}
   m_PrefabAsset: {fileID: 0}
