@@ -4,6 +4,7 @@
  * Creation Date: 4/3/2025
  * Brief: Contains code for menu buttons
  * ***************************************************************************/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -24,31 +25,19 @@ public class MainMenuBehaviour : MonoBehaviour
     /// <summary>
     /// Ensures there is only one instance
     /// </summary>
-    private void Awake()
-    {
-        print("awake");
-        //Makes sure there is one singleton instance
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-
-        LoadSensitivity();
-    }
     private void Start()
     {
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(startButton.gameObject);
+        print("awake");
+        LoadSensitivity();
+        StartCoroutine(DelayByFrame(startButton.gameObject));
     }
     
     private IEnumerator DelayByFrame(GameObject objectToSelect)
     {
+        print("called");
         yield return null;
-        
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(objectToSelect);
     }
     /// <summary>
     /// Sets the sensitivity of the player
@@ -80,13 +69,5 @@ public class MainMenuBehaviour : MonoBehaviour
         } else {
             sensSlider.value = sensitivity;
         }
-    }
-
-    /// <summary>
-    /// Quits out of the game
-    /// </summary>
-    public void QuitGame()
-    {
-
     }
 }
