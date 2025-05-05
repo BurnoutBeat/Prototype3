@@ -124,9 +124,9 @@ public class PauseMenuBehavior : MonoBehaviour
 
     private void LoadSettings()
     {
-        LoadVolume(masterVolumeSlider, "master");
-        LoadVolume(musicVolumeSlider, "music");
-        LoadVolume(sfxVolumeSlider, "sfx");
+        SetVolume(masterVolumeSlider, "master", 0.5f);
+        SetVolume(musicVolumeSlider, "music", 0.5f);
+        SetVolume(sfxVolumeSlider, "sfx", 0.5f);
         //Slider[] sliders = FindObjectsOfType<Slider>();
         //Debug.Log(sliders.Length);
 
@@ -202,5 +202,22 @@ public class PauseMenuBehavior : MonoBehaviour
     public void QuitGmae()
     {
         Application.Quit();
+    }
+
+    private void SetVolume(Slider slider, string key, float defaultValue)
+    {
+        float value;
+
+        if(PlayerPrefs.HasKey(key))
+        {
+            value = PlayerPrefs.GetFloat(key);
+        }
+        else
+        {
+            value = defaultValue;
+            PlayerPrefs.SetFloat(key, value);
+        }
+        slider.value = value;
+        mixer.SetFloat(key, Mathf.Log10(value) * 20);
     }
 }   
